@@ -7,4 +7,4 @@ Install dependencies with
 
 Start the development web server with
 
-    npm start
+    npm run dev
