@@ -1,10 +1,14 @@
 Development Environment
 =======================
 
-Install dependencies with
+Install dependencies
 
     npm install
 
-Start the development web server with
+Create bundle
 
-    npm run dev
+    npm run webpack
+
+Start the development web server
+
+    npm run start
