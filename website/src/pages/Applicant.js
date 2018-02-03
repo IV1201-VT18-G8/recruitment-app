@@ -4,7 +4,6 @@ class Applicant extends Component {
 	render() {
 		return (
 			<p>
-				{this.props.match.url}<br />
 				Applicant page.
 			</p>
 		);
