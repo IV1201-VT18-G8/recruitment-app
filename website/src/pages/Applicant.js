@@ -4,7 +4,7 @@ class Applicant extends Component {
 	render() {
 		return (
 			<p>
-				Applicant page.
+				Applicant front page.
 			</p>
 		);
 	}

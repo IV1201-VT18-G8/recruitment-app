@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import RecruiterFront from './RecruiterFront';
 import RecruiterLogin from './RecruiterLogin';
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
+import {Route, Link} from 'react-router-dom';
 
 class Recruiter extends Component {
 	render() {
