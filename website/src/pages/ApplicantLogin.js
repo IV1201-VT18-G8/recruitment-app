@@ -3,16 +3,16 @@ import LoginForm from '../components/LoginForm';
 import PageHeader from '../components/PageHeader';
 import PageContent from '../components/PageContent';
 
-class RecruiterLogin extends Component {
+class ApplicantLogin extends Component {
 	render() {
 		return (
 			<div>
 				<PageContent>
-					<PageHeader>Recruiter Login</PageHeader>
+					<PageHeader>Applicant Login</PageHeader>
 					<LoginForm />
 				</PageContent>
 			</div>
 		);
 	}
 }
-export default RecruiterLogin;
+export default ApplicantLogin;

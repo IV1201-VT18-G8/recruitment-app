@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import RecruiterFront from './RecruiterFront';
+import RecruiterApp from './RecruiterApp';
 import RecruiterLogin from './RecruiterLogin';
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
+import {DefaultRoute, Switch, Route, Link} from 'react-router-dom';
 
 class Recruiter extends Component {
 	render() {
 		return (
-			<div>
-				<Route exact path={this.props.match.url + "/"} component={RecruiterFront} />
+			<Switch>
 				<Route path={this.props.match.url + "/login"} component={RecruiterLogin} />
-			</div>
+				<Route component={RecruiterApp} />
+			</Switch>
 		);
 	}
 }
