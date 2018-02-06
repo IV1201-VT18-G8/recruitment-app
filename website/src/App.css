@@ -1,0 +1,17 @@
+body {
+	background-color: #eee;
+	color: #333;
+	font-family: sans-serif;
+	font-size: 16px;
+}
+
+.App {}
+
+.App a {
+	text-decoration: none;
+	color: #178ccc;
+}
+
+.App a:hover {
+	color: #13acff;
+}

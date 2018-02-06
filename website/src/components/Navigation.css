@@ -1,0 +1,11 @@
+.Navigation a {
+	color: #aaa;
+	text-decoration: none;
+	display: inline-block;
+	padding: 15px;
+}
+
+.Navigation a:hover,
+.Navigation a:active {
+	background-color: #444
+}
