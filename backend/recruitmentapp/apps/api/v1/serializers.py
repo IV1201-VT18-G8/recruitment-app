@@ -6,7 +6,7 @@ from recruitmentapp.apps.core.models import User, Applicant
 class ApplicantSerializer(serializers.Serializer):
     username = serializers.CharField(source='user.username', max_length=150)
     password = serializers.CharField(source='user.password')
-    first_name = serializers.CharField(source='user.password', max_length=30, required=False, allow_blank=False)
+    first_name = serializers.CharField(source='user.first_name', max_length=30, required=False, allow_blank=False)
     last_name = serializers.CharField(source='user.last_name', max_length=150, required=False, allow_blank=False)
     email = serializers.EmailField(source='user.email')
     social_security_number = serializers.CharField(max_length=20)
