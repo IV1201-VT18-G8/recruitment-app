@@ -13,7 +13,7 @@ User=get_user_model()
 class ApplicantTests(APITestCase):
 
     def setUp(self):
-        self.url = "/api/v1/applicants"
+        self.url = "/api/v1/applicants/"
 
     def test_get_applicant(self):
         user = User.objects.create_user(username="Kim", password="Kim")
