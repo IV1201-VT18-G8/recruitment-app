@@ -10,15 +10,13 @@ import { connect } from 'react-redux';
 
 class App extends Component {
 	render() {
-		const { dispatch, isAuthenticated, errorMessage } = this.props;
-
 		return (
 			<div className="App">
 				<SiteHeader>Recruitment</SiteHeader>
 
 				<Switch>
 					<Route path="/recruiter" component={Recruiter} />
-					<Route path="/login" component={ApplicantLogin} dispatch={dispatch} />
+					<Route path="/login" component={ApplicantLogin} />
 					<Route component={ApplicantApp} />
 				</Switch>
 
@@ -32,4 +30,4 @@ class App extends Component {
 	}
 }
 
-export default connect(null)(App);
+export default App;

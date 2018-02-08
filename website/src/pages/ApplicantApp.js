@@ -9,13 +9,12 @@ class ApplicantApp extends Component {
 	render() {
 		let navlinks = {
 			"Application": "/",
-			"Profile": "/profile",
-			"Log out": "#"
+			"Profile": "/profile"
 		};
 
 		return (
 			<div>
-				<Navigation links={navlinks} />
+				<Navigation links={navlinks} loginPageURL="/login" />
 				<PageContent>
 					<Switch>
 						<Route path={this.props.match.url + "profile"} component={ApplicantAppProfile} />

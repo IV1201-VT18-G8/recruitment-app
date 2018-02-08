@@ -9,13 +9,12 @@ class RecruiterApp extends Component {
 	render() {
 		let navlinks = {
 			"Applications": "/recruiter",
-			"Profile": "/recruiter/profile",
-			"Log out": "#"
+			"Profile": "/recruiter/profile"
 		};
 
 		return (
 			<div>
-				<Navigation links={navlinks} />
+				<Navigation links={navlinks} loginPageURL="/recruiter/login" />
 				<PageContent>
 					<Switch>
 						<Route path={this.props.match.url + "/profile"} component={RecruiterAppProfile} />

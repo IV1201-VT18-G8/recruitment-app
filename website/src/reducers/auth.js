@@ -1,8 +1,10 @@
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS} from '../actions';
+import { AUTH_TOKEN_NAME } from '../consts';
 
 let initState = {
 	isFetching: false,
-	isAuthenticated: localStorage.getItem('id_token') ? true : false
+	isAuthenticated: localStorage.getItem(AUTH_TOKEN_NAME) ? true : false,
+	errorMessage: ''
 };
 
 // TODO: Check if token is valid/expired.
@@ -11,8 +13,7 @@ const auth = (state = initState, action) => {
 		case LOGIN_REQUEST:
 			return Object.assign({}, state, {
 				isFetching: action.isFetching,
-				isAuthenticated: action.isAuthenticated,
-				credentials: action.credentials
+				isAuthenticated: action.isAuthenticated
 			});
 		case LOGIN_SUCCESS:
 			return Object.assign({}, state, {
@@ -24,7 +25,7 @@ const auth = (state = initState, action) => {
 			return Object.assign({}, state, {
 				isFetching: action.isFetching,
 				isAuthenticated: action.isAuthenticated,
-				errorMessage: action.message
+				errorMessage: action.errorMessage
 			});
 		case LOGOUT_SUCCESS:
 			return Object.assign({}, state, {

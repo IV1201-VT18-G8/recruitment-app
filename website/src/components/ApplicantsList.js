@@ -28,7 +28,7 @@ class ApplicantsList extends Component {
 				</thead>
 
 				<tbody>
-					{this.props.applicants.applicants.map((applicant, id) => {
+					{this.props.applicants.map((applicant, id) => {
 						return (
 							<tr key={id}>
 							<td style={cellStyle}>{applicant.first_name}</td>
@@ -50,12 +50,12 @@ class ApplicantsList extends Component {
 }
 
 ApplicantsList.propTypes = {
-	applicants: PropTypes.object.isRequired,
+	applicants: PropTypes.array.isRequired,
 	onRender: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
-	applicants: state.applicants
+	applicants: state.applicants.applicants
 });
 
 const mapDispatchToProps = dispatch => {

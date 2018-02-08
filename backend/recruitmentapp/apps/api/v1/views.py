@@ -1,18 +1,19 @@
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
 
 from rest_framework.response import Response
 
+from recruitmentapp.apps.api.v1.permissions import IsRecruiter
 from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer
 from recruitmentapp.apps.core.models import Applicant
 
 
 class ApplicantViewSet(viewsets.GenericViewSet):
+    """Viewset for recruiters to access Applicants."""
 
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsRecruiter,)
 
     def retrieve(self, request, pk=None):
         applicant = get_object_or_404(self.get_queryset(), pk=pk)
