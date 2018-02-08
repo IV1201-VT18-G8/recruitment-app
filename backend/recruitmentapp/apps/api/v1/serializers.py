@@ -51,7 +51,7 @@ class ApplicantSerializer(serializers.Serializer):
         instance.email = validated_data.get("email", instance.email),
         instance.save()
         instance.applicant.social_security_number = validated_data.get(
-            "social_secutiry_number",
+            "social_security_number",
             instance.applicant.social_security_number
         )
         instance.applicant.save()
