@@ -4,10 +4,23 @@ from recruitmentapp.apps.core.models import User, Applicant
 
 
 class ApplicantSerializer(serializers.Serializer):
-    username = serializers.CharField(source='user.username', max_length=150)
+    username = serializers.CharField(
+        source='user.username',
+        max_length=150
+    )
     password = serializers.CharField(source='user.password')
-    first_name = serializers.CharField(source='user.first_name', max_length=30, required=False, allow_blank=False)
-    last_name = serializers.CharField(source='user.last_name', max_length=150, required=False, allow_blank=False)
+    first_name = serializers.CharField(
+        source='user.first_name',
+        max_length=30,
+        required=False,
+        allow_blank=False
+    )
+    last_name = serializers.CharField(
+        source='user.last_name',
+        max_length=150,
+        required=False,
+        allow_blank=False
+    )
     email = serializers.EmailField(source='user.email')
     social_security_number = serializers.CharField(max_length=20)
 
@@ -31,11 +44,14 @@ class ApplicantSerializer(serializers.Serializer):
         ),
         if "password" in validated_data:
             instance.make_password(password=validated_data["password"])
-        instance.first_name = validated_data.get("first_name", instance.first_name),
-        instance.last_name = validated_data.get("last_name", instance.last_name),
+        instance.first_name = validated_data.get(
+            "first_name", instance.first_name),
+        instance.last_name = validated_data.get(
+            "last_name", instance.last_name),
         instance.email = validated_data.get("email", instance.email),
         instance.save()
         instance.applicant.social_security_number = validated_data.get(
-            "social_secutiry_number", instance.applicant.social_security_number
+            "social_secutiry_number",
+            instance.applicant.social_security_number
         )
         instance.applicant.save()
