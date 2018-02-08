@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import {Route, NavLink} from 'react-router-dom';
 import './Navigation.css';
+import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
+import { logout } from '../actions';
+
+let liStyle = {
+	display: "inline"
+};
+let activeStyle = {
+	color: "white"
+};
 
 class Navigation extends Component {
 	render() {
@@ -15,12 +25,6 @@ class Navigation extends Component {
 			margin: "0",
 			padding: "0"
 		};
-		let liStyle = {
-			display: "inline"
-		};
-		let activeStyle = {
-			color: "white"
-		};
 
 		return (
 			<nav style={navStyle} className="Navigation">
@@ -32,9 +36,49 @@ class Navigation extends Component {
 							</li>
 						);
 					})}
+					{this.logInOutLink()}
 				</ul>
 			</nav>
 		);
 	}
+
+	logInOutLink() {
+		if (this.props.isAuthenticated) {
+			return (<li style={liStyle}><a href="" onClick={(event) => this.handleLogoutClick(event)}>Log out</a></li>)
+		} else {
+			return (
+				<li style={liStyle}>
+					<NavLink to={this.props.loginPageURL} activeStyle={activeStyle} exact={true}>Log in</NavLink>
+				</li>
+			)
+		}
+	}
+
+	handleLogoutClick(event) {
+		event.preventDefault();
+		this.props.onLogoutClick();
+	}
 }
-export default Navigation;
+
+Navigation.propTypes = {
+	isAuthenticated: PropTypes.bool.isRequired,
+	loginPageURL: PropTypes.string.isRequired,
+	onLogoutClick: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => {
+	return {
+		isAuthenticated: state.auth.isAuthenticated,
+	}
+};
+
+const mapDispatchToProps = dispatch => {
+	return {
+		onLogoutClick: credentials => dispatch(logout())
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Navigation);

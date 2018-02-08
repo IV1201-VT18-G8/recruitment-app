@@ -7,6 +7,10 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    @property
+    def is_recruiter(self):
+        return hasattr(self, 'recruiter') and self.recruiter is not None
+
 
 class Applicant(models.Model):
     user = models.OneToOneField(

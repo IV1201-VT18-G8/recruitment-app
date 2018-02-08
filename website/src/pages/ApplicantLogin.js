@@ -6,16 +6,15 @@ import { connect } from 'react-redux';
 
 class ApplicantLogin extends Component {
 	render() {
-		const {dispatch} = this.props;
-
 		return (
 			<div>
 				<PageContent>
 					<PageHeader>Applicant Login</PageHeader>
-					<LoginForm dispatch={dispatch}/>
+					<LoginForm />
 				</PageContent>
 			</div>
 		);
 	}
 }
-export default connect(null)(ApplicantLogin);
+
+export default ApplicantLogin;

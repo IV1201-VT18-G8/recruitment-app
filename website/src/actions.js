@@ -3,7 +3,8 @@
  * https://auth0.com/blog/secure-your-react-and-redux-app-with-jwt-authentication/
  */
 
-import { API_ROOT_URL } from './consts';
+import { API_ROOT_URL, AUTH_TOKEN_NAME } from './consts';
+import { authenticatedRequestHeaders } from './api';
 
 
 /**
@@ -27,21 +28,22 @@ export const receiveLogin = (user) => ({
 	type: LOGIN_SUCCESS,
 	isFetching: false,
 	isAuthenticated: true,
-	id_token: user.id_token
+	errorMessage: ''
 });
 
-export const loginError = (message) => ({
+export const loginError = (errorMessage) => ({
 	type: LOGIN_FAILURE,
 	isFetching: false,
 	isAuthenticated: false,
-	message
+	errorMessage: errorMessage
 });
 
 export const requestLogout = () => {
 	return {
 		type: LOGOUT_REQUEST,
 		isFetching: true,
-		isAuthenticated: true
+		isAuthenticated: true,
+		errorMessage: ''
 	}
 }
 
@@ -49,17 +51,17 @@ export const receiveLogout = () => {
 	return {
 		type: LOGOUT_SUCCESS,
 		isFetching: false,
-		isAuthenticated: false
+		isAuthenticated: false,
+		errorMessage: ''
 	}
 }
 
 export const attemptLogin = (credentials) => {
-	let url = API_ROOT_URL + '/login';
+	let url = API_ROOT_URL + '/login/';
 	let request = {
 		method: 'POST',
 		headers: new Headers({
-			'Content-Type': 'text/plain',
-			'Access-Control-Allow-Origin': '*'
+			'Content-Type': 'application/json'
 		}),
 		body: JSON.stringify({
 			username: credentials.username,
@@ -74,11 +76,11 @@ export const attemptLogin = (credentials) => {
 			)
 			.then(({responseBody, response}) => {
 				if (!response.ok) {
-					dispatch(loginError(responseBody.message));
+					let errorMsg = getErrorMsg(responseBody);
+					dispatch(loginError(errorMsg))
 					return Promise.reject(responseBody);
 				} else {
-					localStorage.setItem('id_token', responseBody.id_token);
-					localStorage.setItem('access_token', responseBody.access_token);
+					localStorage.setItem(AUTH_TOKEN_NAME, responseBody.token);
 					dispatch(receiveLogin(responseBody));
 				}
 			})
@@ -86,11 +88,18 @@ export const attemptLogin = (credentials) => {
 	}
 };
 
+const getErrorMsg = (responseBody) => {
+	if ('non_field_errors' in responseBody) {
+		return responseBody.non_field_errors[0]
+	} else {
+		return ''
+	}
+}
+
 export const logout = () => {
 	return dispatch => {
 		dispatch(requestLogout);
-		localStorage.removeItem('id_token');
-		localStorage.removeItem('access_token');
+		localStorage.removeItem(AUTH_TOKEN_NAME);
 		dispatch(receiveLogout());
 	}
 };
@@ -125,9 +134,7 @@ export const attemptFetchApplicants = () => {
 	let url = API_ROOT_URL + '/applicants/';
 	let request = {
 		method: 'GET',
-		headers: new Headers({
-			'Accept': 'application/json'
-		})
+		headers: authenticatedRequestHeaders()
 	};
 	return dispatch => {
 		dispatch(requestApplicants());
@@ -140,7 +147,6 @@ export const attemptFetchApplicants = () => {
 					dispatch(applicantsFetchError(responseBody.message));
 					return Promise.reject(responseBody);
 				} else {
-					localStorage.setItem('applicants', responseBody);
 					dispatch(receiveApplicants(responseBody));
 				}
 			})
