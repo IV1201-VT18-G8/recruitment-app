@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny
 
 from rest_framework.response import Response
 
@@ -11,6 +12,7 @@ class ApplicantViewSet(viewsets.GenericViewSet):
 
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializer
+    permission_classes = (AllowAny,)
 
     def retrieve(self, request, pk=None):
         applicant = get_object_or_404(self.get_queryset(), pk=pk)

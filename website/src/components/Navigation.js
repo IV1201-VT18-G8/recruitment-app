@@ -25,10 +25,10 @@ class Navigation extends Component {
 		return (
 			<nav style={navStyle} className="Navigation">
 				<ul style={ulStyle}>
-					{Object.entries(this.props.links).map(([text, url])=>{
+					{Object.entries(this.props.links).map(([text, url], i)=>{
 						return (
-							<li style={liStyle}>
-								<NavLink to={url} activeStyle={activeStyle} exact="true">{text}</NavLink>
+							<li style={liStyle} key={i}>
+								<NavLink to={url} activeStyle={activeStyle} exact={true}>{text}</NavLink>
 							</li>
 						);
 					})}
