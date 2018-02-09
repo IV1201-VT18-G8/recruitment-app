@@ -17,11 +17,10 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
-export const requestLogin = (credentials) => ({
+export const requestLogin = () => ({
 	type: LOGIN_REQUEST,
 	isFetching: true,
 	isAuthenticated: false,
-	credentials
 });
 
 export const receiveLogin = (user) => ({
