@@ -3,8 +3,8 @@
  * https://auth0.com/blog/secure-your-react-and-redux-app-with-jwt-authentication/
  */
 
-import { API_ROOT_URL, AUTH_TOKEN_NAME } from './consts';
-import { authenticatedRequestHeaders } from './api';
+import { AUTH_TOKEN_NAME } from './consts';
+import api from './api';
 
 
 /**
@@ -56,34 +56,20 @@ export const receiveLogout = () => {
 }
 
 export const attemptLogin = (credentials) => {
-	let url = API_ROOT_URL + '/login/';
-	let request = {
-		method: 'POST',
-		headers: new Headers({
-			'Content-Type': 'application/json'
-		}),
-		body: JSON.stringify({
-			username: credentials.username,
-			password: credentials.password
-		})
-	};
 	return dispatch => {
-		dispatch(requestLogin(credentials));
-		return fetch(url, request)
-			.then(response =>
-				response.json().then(responseBody => ({responseBody, response}))
-			)
-			.then(({responseBody, response}) => {
-				if (!response.ok) {
-					let errorMsg = getErrorMsg(responseBody);
+		dispatch(requestLogin());
+		api.login.post(credentials)
+			.then(({ ok, body }) => {
+				if (!ok) {
+					localStorage.removeItem(AUTH_TOKEN_NAME);
+					let errorMsg = getErrorMsg(body);
 					dispatch(loginError(errorMsg))
-					return Promise.reject(responseBody);
+					return Promise.reject(body);
 				} else {
-					localStorage.setItem(AUTH_TOKEN_NAME, responseBody.token);
-					dispatch(receiveLogin(responseBody));
+					localStorage.setItem(AUTH_TOKEN_NAME, body.token);
+					dispatch(receiveLogin(body));
 				}
 			})
-			.catch(error => console.log("Error: ", error));
 	}
 };
 
@@ -123,32 +109,22 @@ export const receiveApplicants = (applicants) => ({
 	applicants
 });
 
-export const applicantsFetchError = (message) => ({
+export const applicantsFetchError = () => ({
 	type: APPLICANTS_FETCH_FAILURE,
-	isFetching: false,
-	message
+	isFetching: false
 });
 
 export const attemptFetchApplicants = () => {
-	let url = API_ROOT_URL + '/applicants/';
-	let request = {
-		method: 'GET',
-		headers: authenticatedRequestHeaders()
-	};
 	return dispatch => {
 		dispatch(requestApplicants());
-		return fetch(url, request)
-			.then(response =>
-				response.json().then(responseBody => ({responseBody, response}))
-			)
-			.then(({responseBody, response}) => {
-				if (!response.ok) {
-					dispatch(applicantsFetchError(responseBody.message));
-					return Promise.reject(responseBody);
+		api.applicants.get()
+			.then(({ ok, body }) => {
+				if (!ok) {
+					dispatch(applicantsFetchError());
+					return Promise.reject(body);
 				} else {
-					dispatch(receiveApplicants(responseBody));
+					dispatch(receiveApplicants(body));
 				}
 			})
-			.catch(error => console.log("Error: ", error));
 	}
 };

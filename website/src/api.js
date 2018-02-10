@@ -1,15 +1,55 @@
-import { AUTH_TOKEN_NAME } from './consts';
+import { API_ROOT_URL, AUTH_TOKEN_NAME } from './consts';
 
-export const authenticatedRequestHeaders = () => {
+
+const authenticatedRequestHeaders = () => {
+	let headers = {
+		'Accept': 'application/json'
+	}
 	let token = localStorage.getItem(AUTH_TOKEN_NAME);
 	if (token) {
-		return new Headers({
-			'Accept': 'application/json',
-			'Authorization': 'JWT ' + token
-		});
-	} else {
-		return new Headers({
-			'Accept': 'application/json'
-		});
+		headers['Authorization'] = 'JWT ' + token
+	}
+	return new Headers(headers);
+}
+
+const fetchJSON = (url, request) => {
+	return fetch(url, request)
+		.then(response => response.json()
+			.then(
+				body => {
+					let ok = response.ok;
+					return {ok, body}
+				}
+			)
+		)
+		.catch(error => console.log("Error: ", error));
+}
+
+export default {
+	login: {
+		post: credentials => {
+			let url = API_ROOT_URL + '/login/';
+			let request = {
+				method: 'POST',
+				headers: new Headers({
+					'Content-Type': 'application/json'
+				}),
+				body: JSON.stringify({
+					username: credentials.username,
+					password: credentials.password
+				})
+			};
+			return fetchJSON(url, request);
+		}
+	},
+	applicants: {
+		get: () => {
+			let url = API_ROOT_URL + '/applicants/';
+			let request = {
+				method: 'GET',
+				headers: authenticatedRequestHeaders()
+			};
+			return fetchJSON(url, request);
+		}
 	}
 }

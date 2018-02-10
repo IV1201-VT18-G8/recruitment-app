@@ -6,21 +6,25 @@ let initState = {
 };
 
 const applicants = (state = initState, action) => {
+
+	let commonUpdatedState = {
+		isFetching: action.isFetching
+	}
+
 	switch (action.type) {
 		case APPLICANTS_FETCH_REQUEST:
-			return Object.assign({}, state, {
-				isFetching: action.isFetching,
+			return Object.assign({}, state, commonUpdatedState, {
+
 			});
 		case APPLICANTS_FETCH_SUCCESS:
-			return Object.assign({}, state, {
-				isFetching: action.isFetching,
+			return Object.assign({}, state, commonUpdatedState, {
 				errorMessage: '',
 				applicants: action.applicants
 			});
 		case APPLICANTS_FETCH_FAILURE:
-			return Object.assign({}, state, {
-				isFetching: action.isFetching,
-				errorMessage: action.message
+			return Object.assign({}, state, commonUpdatedState, {
+				errorMessage: "Failed to list applicants.",
+				applicants: []
 			});
 		default:
 			return state;
