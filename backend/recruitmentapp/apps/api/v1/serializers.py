@@ -4,6 +4,11 @@ from recruitmentapp.apps.core.models import User, Applicant
 
 
 class ApplicantSerializer(serializers.Serializer):
+    """Combines fields from a User and an associated Applicant.
+
+    Should be given an Applicant when instantiated.
+    """
+
     username = serializers.CharField(
         source='user.username',
         max_length=150
@@ -25,6 +30,9 @@ class ApplicantSerializer(serializers.Serializer):
     social_security_number = serializers.CharField(max_length=20)
 
     def create(self, validated_data):
+        """Create a new applicant from validated data."""
+
+        # TODO: Add error handling for if create_user() fails.
         user = User.objects.create_user(
             username=validated_data["username"],
             password=validated_data["password"],
