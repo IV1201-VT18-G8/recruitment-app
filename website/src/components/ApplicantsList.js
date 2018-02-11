@@ -55,7 +55,7 @@ ApplicantsList.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-	applicants: state.applicants.applicants
+	applicants: state.applicants
 });
 
 const mapDispatchToProps = dispatch => {

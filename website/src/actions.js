@@ -18,42 +18,25 @@ export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 export const requestLogin = () => ({
-	type: LOGIN_REQUEST,
-	isFetching: true,
-	isAuthenticated: false,
+	type: LOGIN_REQUEST
 });
 
 export const receiveLogin = (user) => ({
-	type: LOGIN_SUCCESS,
-	isFetching: false,
-	isAuthenticated: true,
-	errorMessage: ''
+	type: LOGIN_SUCCESS
 });
 
-export const loginError = (errorMessage) => ({
+export const loginError = (loginErrors) => ({
 	type: LOGIN_FAILURE,
-	isFetching: false,
-	isAuthenticated: false,
-	errorMessage: errorMessage
+	loginErrors
 });
 
-export const requestLogout = () => {
-	return {
-		type: LOGOUT_REQUEST,
-		isFetching: true,
-		isAuthenticated: true,
-		errorMessage: ''
-	}
-}
+export const requestLogout = () => ({
+	type: LOGOUT_REQUEST
+})
 
-export const receiveLogout = () => {
-	return {
-		type: LOGOUT_SUCCESS,
-		isFetching: false,
-		isAuthenticated: false,
-		errorMessage: ''
-	}
-}
+export const receiveLogout = () => ({
+	type: LOGOUT_SUCCESS
+})
 
 export const attemptLogin = (credentials) => {
 	return dispatch => {
@@ -62,8 +45,7 @@ export const attemptLogin = (credentials) => {
 			.then(({ ok, body }) => {
 				if (!ok) {
 					localStorage.removeItem(AUTH_TOKEN_NAME);
-					let errorMsg = getErrorMsg(body);
-					dispatch(loginError(errorMsg))
+					dispatch(loginError(body))
 					return Promise.reject(body);
 				} else {
 					localStorage.setItem(AUTH_TOKEN_NAME, body.token);
@@ -73,13 +55,13 @@ export const attemptLogin = (credentials) => {
 	}
 };
 
-const getErrorMsg = (responseBody) => {
-	if ('non_field_errors' in responseBody) {
-		return responseBody.non_field_errors[0]
-	} else {
-		return ''
-	}
-}
+// const getErrorMsg = (responseBody) => {
+// 	if ('non_field_errors' in responseBody) {
+// 		return responseBody.non_field_errors[0]
+// 	} else {
+// 		return ''
+// 	}
+// }
 
 export const logout = () => {
 	return dispatch => {
@@ -100,18 +82,16 @@ export const APPLICANTS_FETCH_FAILURE = 'APPLICANTS_FETCH_FAILURE';
 
 export const requestApplicants = () => ({
 	type: APPLICANTS_FETCH_REQUEST,
-	isFetching: true
 });
 
 export const receiveApplicants = (applicants) => ({
 	type: APPLICANTS_FETCH_SUCCESS,
-	isFetching: false,
 	applicants
 });
 
-export const applicantsFetchError = () => ({
+export const applicantsFetchError = (applicantsFetchErrors) => ({
 	type: APPLICANTS_FETCH_FAILURE,
-	isFetching: false
+	applicantsFetchErrors
 });
 
 export const attemptFetchApplicants = () => {
