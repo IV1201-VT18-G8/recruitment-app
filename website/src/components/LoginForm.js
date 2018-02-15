@@ -6,6 +6,11 @@ import * as AuthActions from '../actions';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
+let errMsgStyle = {
+	color: '#ce1717',
+	fontSize: '0.8em'
+};
+
 class LoginForm extends Component {
 	render() {
 		if (this.props.isAuthenticated) {
@@ -13,19 +18,23 @@ class LoginForm extends Component {
 		}
 
 		let formStyle = {};
+		let labelStyle = {
+			display: 'block',
+			marginBottom: '5px'
+		};
 
 		return (
 			<form style={formStyle} onSubmit={(event) => this.handleSubmit(event)}>
 				<p>
-					<label htmlFor="username">Username</label>
-					<br /><input type="text" ref="username" id="username" style={this.inputStyle('username')}/>
+					<label htmlFor="username" style={labelStyle}>Username</label>
+					<input type="text" ref="username" id="username" style={this.inputStyle('username')}/>
+					{this.errorSpan('username')}
 				</p>
-				{this.errorP('username')}
 				<p>
-					<label htmlFor="password">Password</label>
-					<br /><input type="password" ref="password" id="password" style={this.inputStyle('password')} />
+					<label htmlFor="password" style={labelStyle}>Password</label>
+					<input type="password" ref="password" id="password" style={this.inputStyle('password')} />
+					{this.errorSpan('password')}
 				</p>
-				{this.errorP('password')}
 				<button type="submit">
 					Log in
 				</button>
@@ -48,12 +57,13 @@ class LoginForm extends Component {
 	}
 
 	errorP(fieldName) {
-		let errMsgStyle = {
-			color: '#ce1717',
-			fontSize: '0.8em'
-		}
 		const error = this.props.loginErrors[fieldName];
 		return error ? (<p style={errMsgStyle}>{error}</p>): null;
+	}
+
+	errorSpan(fieldName) {
+		const error = this.props.loginErrors[fieldName];
+		return error ? (<span style={errMsgStyle}><br />{error}</span>): null;
 	}
 
 	handleSubmit(event) {
