@@ -4,9 +4,14 @@ import { attemptLogin } from '../actions';
 import { bindActionCreators } from 'redux';
 import * as AuthActions from '../actions';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 class LoginForm extends Component {
 	render() {
+		if (this.props.isAuthenticated) {
+			return <Redirect to={this.props.onLoginRedirect} />;
+		}
+
 		let formStyle = {};
 		return (
 			<form style={formStyle}>
@@ -45,7 +50,8 @@ class LoginForm extends Component {
 LoginForm.propTypes = {
 	isAuthenticated: PropTypes.bool.isRequired,
 	loginErrors: PropTypes.object.isRequired,
-	onLoginSubmit: PropTypes.func.isRequired
+	onLoginSubmit: PropTypes.func.isRequired,
+	onLoginRedirect: PropTypes.string.isRequired
 }
 
 const mapStateToProps = (state) => {

@@ -10,7 +10,7 @@ class ApplicantLogin extends Component {
 			<div>
 				<PageContent>
 					<PageHeader>Applicant Login</PageHeader>
-					<LoginForm />
+					<LoginForm onLoginRedirect="/" />
 				</PageContent>
 			</div>
 		);

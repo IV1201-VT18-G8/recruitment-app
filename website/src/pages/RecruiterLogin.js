@@ -9,7 +9,7 @@ class RecruiterLogin extends Component {
 			<div>
 				<PageContent>
 					<PageHeader>Recruiter Login</PageHeader>
-					<LoginForm />
+					<LoginForm onLoginRedirect="/recruiter" />
 				</PageContent>
 			</div>
 		);
