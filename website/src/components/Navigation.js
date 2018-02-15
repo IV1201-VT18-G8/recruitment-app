@@ -68,7 +68,7 @@ Navigation.propTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		isAuthenticated: state.auth.isAuthenticated,
+		isAuthenticated: state.isAuthenticated,
 	}
 };
 

@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 class LoginForm extends Component {
 	render() {
 		let formStyle = {};
-		console.log(this.props);
-
 		return (
 			<form style={formStyle}>
 				<p>
@@ -46,14 +44,14 @@ class LoginForm extends Component {
 
 LoginForm.propTypes = {
 	isAuthenticated: PropTypes.bool.isRequired,
-	errorMessage: PropTypes.string.isRequired,
+	loginErrors: PropTypes.object.isRequired,
 	onLoginSubmit: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
 	return {
-		isAuthenticated: state.auth.isAuthenticated,
-		errorMessage: state.auth.errorMessage
+		isAuthenticated: state.isAuthenticated,
+		loginErrors: state.loginErrors
 	}
 };
 
