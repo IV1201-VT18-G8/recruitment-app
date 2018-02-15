@@ -4,6 +4,11 @@ from recruitmentapp.apps.core.models import User, Applicant
 
 
 class ApplicantSerializer(serializers.Serializer):
+    """Combines fields from a User and an associated Applicant.
+
+    Should be given an Applicant when instantiated.
+    """
+
     username = serializers.CharField(
         source='user.username',
         max_length=150
@@ -25,6 +30,9 @@ class ApplicantSerializer(serializers.Serializer):
     social_security_number = serializers.CharField(max_length=20)
 
     def create(self, validated_data):
+        """Create a new applicant from validated data."""
+
+        # TODO: Add error handling for if create_user() fails.
         user = User.objects.create_user(
             username=validated_data["username"],
             password=validated_data["password"],
@@ -32,26 +40,32 @@ class ApplicantSerializer(serializers.Serializer):
             last_name=validated_data.get("last_name", ""),
             email=validated_data["email"],
         )
-        Applicant.object.create(
+        applicant = Applicant.object.create(
             user=user,
             social_security_number=validated_data["social_security_number"]
         )
-        return user
+        return applicant
 
     def update(self, instance, validated_data):
-        instance.username = validated_data.get(
-            "username", instance.username
+        """Update an existing applicant from validated data."""
+
+        # User fields
+        user = instance.user
+        user.username = validated_data.get(
+            "username", user.username
         ),
         if "password" in validated_data:
-            instance.make_password(password=validated_data["password"])
-        instance.first_name = validated_data.get(
-            "first_name", instance.first_name),
-        instance.last_name = validated_data.get(
-            "last_name", instance.last_name),
-        instance.email = validated_data.get("email", instance.email),
-        instance.save()
-        instance.applicant.social_security_number = validated_data.get(
+            user.make_password(password=validated_data["password"])
+        user.first_name = validated_data.get(
+            "first_name", user.first_name),
+        user.last_name = validated_data.get(
+            "last_name", user.last_name),
+        user.email = validated_data.get("email", user.email),
+        user.save()
+
+        # Applicant fields
+        instance.social_security_number = validated_data.get(
             "social_security_number",
-            instance.applicant.social_security_number
+            instance.social_security_number
         )
-        instance.applicant.save()
+        instance.save()
