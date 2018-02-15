@@ -15,7 +15,7 @@ class LoginForm extends Component {
 		let formStyle = {};
 
 		return (
-			<form style={formStyle}>
+			<form style={formStyle} onSubmit={(event) => this.handleSubmit(event)}>
 				<p>
 					<label htmlFor="username">Username</label>
 					<br /><input type="text" ref="username" id="username" style={this.inputStyle('username')}/>
@@ -26,7 +26,7 @@ class LoginForm extends Component {
 					<br /><input type="password" ref="password" id="password" style={this.inputStyle('password')} />
 				</p>
 				{this.errorP('password')}
-				<button type="button" onClick={(event) => this.handleSubmit(event)}>
+				<button type="submit">
 					Log in
 				</button>
 				{this.errorP('non_field_errors')}
@@ -57,6 +57,7 @@ class LoginForm extends Component {
 	}
 
 	handleSubmit(event) {
+		event.preventDefault();
 		const credentials = {
 			username: this.refs.username.value.trim(),
 			password: this.refs.password.value.trim(),
