@@ -2,8 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-# Create your models here.
 class User(AbstractUser):
+    """Used for authentication of all users."""
+
     def __str__(self):
         return self.username
 
@@ -13,6 +14,8 @@ class User(AbstractUser):
 
 
 class Applicant(models.Model):
+    """A person who is applying for a job."""
+
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -25,6 +28,8 @@ class Applicant(models.Model):
 
 
 class Recruiter(models.Model):
+    """A person who is recruiting from among the applicants."""
+
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,

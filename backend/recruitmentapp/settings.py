@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'recruitmentapp.apps.core',
     'rest_framework',
     'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
