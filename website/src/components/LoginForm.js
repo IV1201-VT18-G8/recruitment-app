@@ -13,29 +13,47 @@ class LoginForm extends Component {
 		}
 
 		let formStyle = {};
+
 		return (
 			<form style={formStyle}>
 				<p>
 					<label htmlFor="username">Username</label>
-					<br /><input type="text" ref="username" id="username" />
+					<br /><input type="text" ref="username" id="username" style={this.inputStyle('username')}/>
 				</p>
+				{this.errorP('username')}
 				<p>
 					<label htmlFor="password">Password</label>
-					<br /><input type="password" ref="password" id="password" />
+					<br /><input type="password" ref="password" id="password" style={this.inputStyle('password')} />
 				</p>
+				{this.errorP('password')}
 				<button type="button" onClick={(event) => this.handleSubmit(event)}>
 					Log in
 				</button>
-				{this.errorP()}
+				{this.errorP('non_field_errors')}
 			</form>
 		);
 	}
 
-	errorP() {
+	inputStyle(fieldName) {
+		let style = {
+			border: '1px solid black',
+			borderRadius: '3px'
+		};
+		let invalidInputStyle = {
+			border: '1px solid #ce1717',
+			boxShadow: '0px 0px 5px 0px rgba(206,23,23,0.66)'
+		};
+		const error = this.props.loginErrors[fieldName];
+		return error ? {...style, ...invalidInputStyle} : style;
+	}
+
+	errorP(fieldName) {
 		let errMsgStyle = {
-			color: 'red'
+			color: '#ce1717',
+			fontSize: '0.8em'
 		}
-		return this.props.errorMessage ? (<p style={errMsgStyle}>{this.props.errorMessage}</p>): null
+		const error = this.props.loginErrors[fieldName];
+		return error ? (<p style={errMsgStyle}>{error}</p>): null;
 	}
 
 	handleSubmit(event) {
