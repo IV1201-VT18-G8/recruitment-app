@@ -12,6 +12,10 @@ class User(AbstractUser):
     def is_recruiter(self):
         return hasattr(self, 'recruiter') and self.recruiter is not None
 
+    @property
+    def is_applicant(self):
+        return hasattr(self, 'applicant') and self.applicant is not None
+
 
 class Applicant(models.Model):
     """A person who is applying for a job."""
