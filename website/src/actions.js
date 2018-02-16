@@ -3,7 +3,12 @@
  * https://auth0.com/blog/secure-your-react-and-redux-app-with-jwt-authentication/
  */
 
-import { AUTH_TOKEN_NAME } from './consts';
+import {
+	LOCAL_STORAGE_AUTH_TOKEN_NAME,
+	LOCAL_STORAGE_USER_ID_NAME,
+	LOCAL_STORAGE_IS_APPLICANT_NAME,
+	LOCAL_STORAGE_IS_RECRUITER_NAME
+} from './consts';
 import api from './api';
 
 
@@ -21,7 +26,7 @@ export const requestLogin = () => ({
 	type: LOGIN_REQUEST
 });
 
-export const receiveLogin = (user) => ({
+export const receiveLogin = () => ({
 	type: LOGIN_SUCCESS
 });
 
@@ -44,29 +49,30 @@ export const attemptLogin = (credentials) => {
 		api.login.post(credentials)
 			.then(({ ok, body }) => {
 				if (!ok) {
-					localStorage.removeItem(AUTH_TOKEN_NAME);
+					localStorage.removeItem(LOCAL_STORAGE_AUTH_TOKEN_NAME);
+					localStorage.removeItem(LOCAL_STORAGE_USER_ID_NAME);
+					localStorage.removeItem(LOCAL_STORAGE_IS_APPLICANT_NAME);
+					localStorage.removeItem(LOCAL_STORAGE_IS_RECRUITER_NAME);
 					dispatch(loginError(body))
 					return Promise.reject(body);
 				} else {
-					localStorage.setItem(AUTH_TOKEN_NAME, body.token);
-					dispatch(receiveLogin(body));
+					localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_NAME, body.token);
+					localStorage.setItem(LOCAL_STORAGE_USER_ID_NAME, body.user_id);
+					localStorage.setItem(LOCAL_STORAGE_IS_APPLICANT_NAME, body.is_applicant);
+					localStorage.setItem(LOCAL_STORAGE_IS_RECRUITER_NAME, body.is_recruiter);
+					dispatch(receiveLogin());
 				}
 			})
 	}
 };
 
-// const getErrorMsg = (responseBody) => {
-// 	if ('non_field_errors' in responseBody) {
-// 		return responseBody.non_field_errors[0]
-// 	} else {
-// 		return ''
-// 	}
-// }
-
 export const logout = () => {
 	return dispatch => {
 		dispatch(requestLogout);
-		localStorage.removeItem(AUTH_TOKEN_NAME);
+		localStorage.removeItem(LOCAL_STORAGE_AUTH_TOKEN_NAME);
+		localStorage.removeItem(LOCAL_STORAGE_USER_ID_NAME);
+		localStorage.removeItem(LOCAL_STORAGE_IS_APPLICANT_NAME);
+		localStorage.removeItem(LOCAL_STORAGE_IS_RECRUITER_NAME);
 		dispatch(receiveLogout());
 	}
 };
