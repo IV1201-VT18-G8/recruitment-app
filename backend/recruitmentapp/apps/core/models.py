@@ -68,3 +68,36 @@ class Competence(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CompetenceProfile(models.Model):
+    """Specifies the number of years of experience that an Applicant has for
+    a particular competence.
+
+    Many-to-many intermediate model between Competence and Applicant.
+    """
+
+    class Meta:
+        unique_together = (('applicant', 'competence'),)
+
+    applicant = models.ForeignKey(
+        Applicant,
+        related_name='competences',
+        on_delete=models.CASCADE,
+    )
+    competence = models.ForeignKey(
+        Competence,
+        related_name='profiles',
+        on_delete=models.PROTECT,
+    )
+    experience = models.FloatField(
+        verbose_name="Years of experience",
+        default=0,
+    )
+
+    def __str__(self):
+        return '{applicant} - {competence} - {experience} years'.format(
+            applicant=str(self.applicant),
+            competence=self.competence.name,
+            experience=str(self.experience),
+        )
