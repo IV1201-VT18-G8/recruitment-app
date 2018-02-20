@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from recruitmentapp.apps.core.models import User, Applicant
+from recruitmentapp.apps.core.models import User, Applicant, Competence
 
 
 class ApplicantSerializer(serializers.Serializer):
@@ -69,3 +69,9 @@ class ApplicantSerializer(serializers.Serializer):
             instance.social_security_number
         )
         instance.save()
+
+
+class CompetenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Competence
+        fields = ('name')
