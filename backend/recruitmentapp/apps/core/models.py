@@ -63,6 +63,12 @@ class Competence(models.Model):
 
 
 class CompetenceProfile(models.Model):
+    """Specifies the number of years of experience that an Applicant has for
+    a particular competence.
+
+    Many-to-many intermediate model between Competence and Applicant.
+    """
+
     class Meta:
         unique_together = (('applicant', 'competence'),)
 
@@ -80,3 +86,10 @@ class CompetenceProfile(models.Model):
         verbose_name="Years of experience",
         default=0,
     )
+
+    def __str__(self):
+        return '{applicant} - {competence} - {experience} years'.format(
+            applicant=str(self.applicant),
+            competence=self.competence.name,
+            experience=str(self.experience),
+        )
