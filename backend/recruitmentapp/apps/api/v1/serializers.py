@@ -74,4 +74,4 @@ class ApplicantSerializer(serializers.Serializer):
 class CompetenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Competence
-        fields = ('name')
+        fields = ('id', 'name')
