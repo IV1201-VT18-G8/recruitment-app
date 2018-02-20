@@ -39,7 +39,8 @@ urlpatterns = [
         schema_view.with_ui('swagger', cache_timeout=None),
         name='schema-swagger-ui',
     ),
-    url(r'^redoc/$',
+    url(
+        r'^redoc/$',
         schema_view.with_ui('redoc', cache_timeout=None),
         name='schema-redoc',
     ),
