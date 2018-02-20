@@ -46,12 +46,20 @@ class Recruiter(models.Model):
 
 class Availability(models.Model):
     """The dates an applicant is available to work."""
-    applicant = models.ForeignKey(Applicant, on_delete=models.CASCADE, related_name="availabilities")
-    start = models.DateField(verbose_name="Start date", null=False, blank=False)
+    applicant = models.ForeignKey(
+        Applicant,
+        on_delete=models.CASCADE,
+        related_name="availabilities"
+    )
+    start = models.DateField(
+        verbose_name="Start date",
+        null=False,
+        blank=False)
     end = models.DateField(verbose_name="End date", null=True, blank=True)
 
     def __str__(self):
-        return str(self.applicants) + " Start date: " + self.start + " End date: " + self.end
+        return str(self.applicants) + " Start date: " + self.start \
+               + " End date: " + self.end
 
 
 class Competence(models.Model):
