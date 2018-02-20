@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from recruitmentapp.apps.core.models import User, Applicant, Competence
+from recruitmentapp.apps.core.models import User, Applicant, Competence, Availability, CompetenceProfile
 
 
 class ApplicantSerializer(serializers.Serializer):
@@ -75,3 +75,15 @@ class CompetenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Competence
         fields = ('id', 'name')
+
+
+class AvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Availability
+        fields = ('applicant', 'start', 'end')
+
+
+class CompetenceProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompetenceProfile
+        fields = ('') # TBD
