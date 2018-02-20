@@ -1,5 +1,10 @@
 import { combineReducers } from 'redux'
-import { AUTH_TOKEN_NAME } from '../consts';
+import {
+	LOCAL_STORAGE_AUTH_TOKEN_NAME,
+	LOCAL_STORAGE_IS_APPLICANT_NAME,
+	LOCAL_STORAGE_IS_RECRUITER_NAME,
+	LOCAL_STORAGE_USER_ID_NAME
+} from '../consts';
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -11,9 +16,25 @@ export const APPLICANTS_FETCH_REQUEST = 'APPLICANTS_FETCH_REQUEST';
 export const APPLICANTS_FETCH_SUCCESS = 'APPLICANTS_FETCH_SUCCESS';
 export const APPLICANTS_FETCH_FAILURE = 'APPLICANTS_FETCH_FAILURE';
 
+const getParsedFromLocalStorage = (name) => {
+	let raw = localStorage.getItem(name);
+	return JSON.parse(raw);
+}
+
+const getCurrentAuthState = () => {
+	const isAuthenticated = localStorage.getItem(LOCAL_STORAGE_AUTH_TOKEN_NAME) ? true : false;
+	const isApplicant = isAuthenticated && getParsedFromLocalStorage(LOCAL_STORAGE_IS_APPLICANT_NAME);
+	const isRecruiter = isAuthenticated && getParsedFromLocalStorage(LOCAL_STORAGE_IS_RECRUITER_NAME);
+	return {
+		isAuthenticated: isAuthenticated,
+		isApplicant: isApplicant,
+		isRecruiter: isRecruiter,
+		user_id: getParsedFromLocalStorage(LOCAL_STORAGE_USER_ID_NAME),
+	};
+}
+
 let initState = {
-	isFetchingAuth: false,
-	isAuthenticated: localStorage.getItem(AUTH_TOKEN_NAME) ? true : false,
+	...getCurrentAuthState(),
 	loginErrors: {},
 	isFetchingApplicants: false,
 	applicantsFetchErrors: {},
@@ -22,7 +43,7 @@ let initState = {
 
 const recruitmentApp = (state = initState, action) => {
 	let commonUpdatedState = {
-		isAuthenticated: localStorage.getItem(AUTH_TOKEN_NAME) ? true : false
+		...getCurrentAuthState()
 	};
 
 	switch (action.type) {
