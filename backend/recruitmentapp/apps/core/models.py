@@ -51,7 +51,7 @@ class Availability(models.Model):
     end = models.DateField(verbose_name="End date", null=True, blank=True)
 
     def __str__(self):
-        return str(self.applicants) + self.start + "-" + self.end
+        return str(self.applicants) + " Start date: " + self.start + " End date: " + self.end
 
 
 class Competence(models.Model):
