@@ -1,11 +1,11 @@
-import { API_ROOT_URL, AUTH_TOKEN_NAME } from './consts';
+import { API_ROOT_URL, LOCAL_STORAGE_AUTH_TOKEN_NAME } from './consts';
 
 
 const authenticatedRequestHeaders = () => {
 	let headers = {
 		'Accept': 'application/json'
 	}
-	let token = localStorage.getItem(AUTH_TOKEN_NAME);
+	let token = localStorage.getItem(LOCAL_STORAGE_AUTH_TOKEN_NAME);
 	if (token) {
 		headers['Authorization'] = 'JWT ' + token
 	}

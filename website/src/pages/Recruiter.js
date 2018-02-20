@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import RecruiterApp from './RecruiterApp';
 import RecruiterLogin from './RecruiterLogin';
+import ProtectedRoute from '../components/ProtectedRoute';
 import {DefaultRoute, Switch, Route, Link} from 'react-router-dom';
 
 class Recruiter extends Component {
 	render() {
+		let recruiterLoginPath = this.props.match.url + "/login"
 		return (
 			<Switch>
-				<Route path={this.props.match.url + "/login"} component={RecruiterLogin} />
-				<Route component={RecruiterApp} />
+				<Route path={recruiterLoginPath} component={RecruiterLogin} />
+				<ProtectedRoute component={RecruiterApp} loginPath={recruiterLoginPath} />
 			</Switch>
 		);
 	}

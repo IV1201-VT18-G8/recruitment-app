@@ -8,6 +8,54 @@ from recruitmentapp.apps.core.models import Applicant, Recruiter
 User = get_user_model()
 
 
+class LoginTests(APITestCase):
+    def setUp(self):
+        self.url = "/api/v1/login/"
+
+    def test_login_applicant(self):
+        username = 'testuser'
+        password = 'asdfasdf'
+
+        user = User.objects.create_user(
+            username=username, password=password)
+        Applicant.objects.create(
+            user=user, social_security_number="123412343")
+
+        self.client.force_authenticate(user=None)
+        response = self.client.post(
+            self.url,
+            {
+                'username': username,
+                'password': password,
+            }
+        )
+        self.assertEqual(len(response.data), 4)
+        self.assertEqual(response.data['user_id'], user.pk)
+        self.assertEqual(response.data['is_applicant'], True)
+        self.assertEqual(response.data['is_recruiter'], False)
+
+    def test_login_recruiter(self):
+        username = 'testuser'
+        password = 'asdfasdf'
+
+        user = User.objects.create_user(
+            username=username, password=password)
+        Recruiter.objects.create(user=user)
+
+        self.client.force_authenticate(user=None)
+        response = self.client.post(
+            self.url,
+            {
+                'username': username,
+                'password': password,
+            }
+        )
+        self.assertEqual(len(response.data), 4)
+        self.assertEqual(response.data['user_id'], user.pk)
+        self.assertEqual(response.data['is_applicant'], False)
+        self.assertEqual(response.data['is_recruiter'], True)
+
+
 class ApplicantTests(APITestCase):
 
     def setUp(self):

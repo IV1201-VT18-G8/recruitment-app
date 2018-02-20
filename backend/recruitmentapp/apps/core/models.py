@@ -12,6 +12,10 @@ class User(AbstractUser):
     def is_recruiter(self):
         return hasattr(self, 'recruiter') and self.recruiter is not None
 
+    @property
+    def is_applicant(self):
+        return hasattr(self, 'applicant') and self.applicant is not None
+
 
 class Applicant(models.Model):
     """A person who is applying for a job."""
@@ -38,3 +42,21 @@ class Recruiter(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Availability(models.Model):
+    """The dates an applicant is available to work."""
+    applicant = models.ForeignKey(Applicant, on_delete=models.CASCADE, related_name="availabilities")
+    start = models.DateField(verbose_name="Start date", null=False, blank=False)
+    end = models.DateField(verbose_name="End date", null=True, blank=True)
+
+    def __str__(self):
+        return str(self.applicants) + " Start date: " + self.start + " End date: " + self.end
+
+
+class Competence(models.Model):
+    """The work competence an applicant has."""
+    name = models.CharField(max_length=80)
+
+    def __str__(self):
+        return self.name
