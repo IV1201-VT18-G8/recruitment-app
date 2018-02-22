@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from parler.models import TranslatedFields, TranslatableModel
 
 
 class User(AbstractUser):
@@ -62,9 +63,12 @@ class Availability(models.Model):
                + " End date: " + self.end
 
 
-class Competence(models.Model):
+class Competence(TranslatableModel):
     """The work competence an applicant has."""
-    name = models.CharField(max_length=80)
+
+    translations = TranslatedFields(
+        name=models.CharField(max_length=80)
+    )
 
     def __str__(self):
         return self.name
