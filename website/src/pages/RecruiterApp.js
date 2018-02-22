@@ -6,11 +6,15 @@ import RecruiterAppApplications from '../pages/RecruiterAppApplications';
 import RecruiterAppProfile from '../pages/RecruiterAppProfile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
+import messages from '../messages';
 
 class RecruiterApp extends Component {
 	renderNotAuthorized() {
 		return (
-			<p>You are not authorized to view this page.</p>
+			<p>
+				<FormattedMessage id="notAuthorized" defaultMessage="You are not authorized to view this page." />
+			</p>
 		)
 	}
 
@@ -25,9 +29,11 @@ class RecruiterApp extends Component {
 
 	render() {
 		let navlinks = {
-			"Applications": "/recruiter",
-			"Profile": "/recruiter/profile"
+			
 		};
+
+		navlinks[messages[this.context.intl.locale].recruiterMenyApplications] = "/"
+		navlinks[messages[this.context.intl.locale].recruiterMenyProfile] = "/profile"
 
 		return (
 			<div>
@@ -39,6 +45,10 @@ class RecruiterApp extends Component {
 		);
 	}
 }
+
+RecruiterApp.contextTypes = {
+    intl: PropTypes.object
+};
 
 RecruiterApp.propTypes = {
 	isRecruiter: PropTypes.bool.isRequired
