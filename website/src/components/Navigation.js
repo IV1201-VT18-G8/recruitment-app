@@ -4,6 +4,7 @@ import './Navigation.css';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { logout } from '../actions';
+import { FormattedMessage } from 'react-intl';
 
 let liStyle = {
 	display: "inline"
@@ -44,11 +45,13 @@ class Navigation extends Component {
 
 	logInOutLink() {
 		if (this.props.isAuthenticated) {
-			return (<li style={liStyle}><a href="" onClick={(event) => this.handleLogoutClick(event)}>Log out</a></li>)
+			return (<li style={liStyle}><a href="" onClick={(event) => this.handleLogoutClick(event)}>
+									<FormattedMessage id="logout.message" defaultMessage="Log out" /></a></li>)
 		} else {
 			return (
 				<li style={liStyle}>
-					<NavLink to={this.props.loginPageURL} activeStyle={activeStyle} exact={true}>Log in</NavLink>
+					<NavLink to={this.props.loginPageURL} activeStyle={activeStyle} exact={true}>
+							<FormattedMessage id="login.message" defaultMessage="Log in" /></NavLink>
 				</li>
 			)
 		}
