@@ -48,7 +48,7 @@ export default {
     'applicantMenyProfile': 'Profil',
     'recruiterMenyApplications': 'Ansökningar',
     'recruiterMenyProfile': 'Profil',
-    'recruiterLink': 'Rekrytare',
+    'recruiterLink': 'Rekryterare',
     'recruiterLoginHeader': 'Inloggning för rekryterare'
   },
   fi : {
