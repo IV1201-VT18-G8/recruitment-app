@@ -20,11 +20,11 @@ class ApplicantsList extends Component {
 			<table style={tableStyle}>
 				<thead>
 					<tr>
-						<th scope="col" style={cellStyle}><FormattedMessage id="firstName.message" defaultMessage="First Name" /></th>
-						<th scope="col" style={cellStyle}><FormattedMessage id="lastName.message" defaultMessage="Last Name" /></th>
-						<th scope="col" style={cellStyle}><FormattedMessage id="username.message" defaultMessage="Username" /></th>
-						<th scope="col" style={cellStyle}><FormattedMessage id="email.message" defaultMessage="Email" /></th>
-						<th scope="col" style={cellStyle}><FormattedMessage id="socialSecurityNumber.message" defaultMessage="SSN" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="firstName" defaultMessage="First Name" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="lastName" defaultMessage="Last Name" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="username" defaultMessage="Username" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="email" defaultMessage="Email" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="socialSecurityNumber" defaultMessage="SSN" /></th>
 					</tr>
 				</thead>
 

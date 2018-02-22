@@ -13,7 +13,7 @@ class ApplicantApp extends Component {
 	renderNotAuthorized() {
 		return (
 			<p>
-				<FormattedMessage id="notAuthorizedApplicant.message" defaultMessage="You are not authorized to view this page." />
+				<FormattedMessage id="notAuthorizedApplicant" defaultMessage="You are not authorized to view this page." />
 			</p>
 		)
 	}

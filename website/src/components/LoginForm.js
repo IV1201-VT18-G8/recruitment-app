@@ -28,20 +28,20 @@ class LoginForm extends Component {
 			<form style={formStyle} onSubmit={(event) => this.handleSubmit(event)}>
 				<p>
 					<label htmlFor="username" style={labelStyle}>
-							<FormattedMessage id="usernameLabel.message" defaultMessage="Username" />
+							<FormattedMessage id="usernameLabel" defaultMessage="Username" />
 					</label>
 					<input type="text" ref="username" id="username" style={this.inputStyle('username')}/>
 					{this.errorSpan('username')}
 				</p>
 				<p>
 					<label htmlFor="password" style={labelStyle}>
-							<FormattedMessage id="passwordLabel.message" defaultMessage="Password" />
+							<FormattedMessage id="passwordLabel" defaultMessage="Password" />
 					</label>
 					<input type="password" ref="password" id="password" style={this.inputStyle('password')} />
 					{this.errorSpan('password')}
 				</p>
 				<button type="submit">
-					<FormattedMessage id="loginButtonLabel.message" defaultMessage="Log in" />
+					<FormattedMessage id="loginButtonLabel" defaultMessage="Log in" />
 				</button>
 				{this.errorP('non_field_errors')}
 			</form>

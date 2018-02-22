@@ -11,7 +11,7 @@ class ApplicantLogin extends Component {
 			<div>
 				<PageContent>
 					<PageHeader>
-						<FormattedMessage id="loginHeader.message" defaultMessage="Applicant login" />
+						<FormattedMessage id="loginHeader" defaultMessage="Applicant login" />
 					</PageHeader>
 					<LoginForm onLoginRedirect="/" />
 				</PageContent>

@@ -9,9 +9,9 @@ class ApplicantAppProfile extends Component {
 		return (
 			<div>
 				<PageHeader>
-					<FormattedMessage id="applicantProfileHeader.message" defaultMessage="Profile" />
+					<FormattedMessage id="applicantProfileHeader" defaultMessage="Profile" />
 				</PageHeader>
-				<FormattedMessage id="applicantProfile.message" defaultMessage="Applicant profile page." />
+				<FormattedMessage id="applicantProfile" defaultMessage="Applicant profile page." />
 			</div>
 		);
 	}

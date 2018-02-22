@@ -46,12 +46,12 @@ class Navigation extends Component {
 	logInOutLink() {
 		if (this.props.isAuthenticated) {
 			return (<li style={liStyle}><a href="" onClick={(event) => this.handleLogoutClick(event)}>
-									<FormattedMessage id="logout.message" defaultMessage="Log out" /></a></li>)
+									<FormattedMessage id="logout" defaultMessage="Log out" /></a></li>)
 		} else {
 			return (
 				<li style={liStyle}>
 					<NavLink to={this.props.loginPageURL} activeStyle={activeStyle} exact={true}>
-							<FormattedMessage id="login.message" defaultMessage="Log in" /></NavLink>
+							<FormattedMessage id="login" defaultMessage="Log in" /></NavLink>
 				</li>
 			)
 		}

@@ -29,7 +29,7 @@ class App extends Component {
 			>
 				<div className="App">
 					<SiteHeader>
-						<FormattedMessage id="applicationSiteHeader.message" defaultMessage="Recruitment" />
+						<FormattedMessage id="applicationSiteHeader" defaultMessage="Recruitment" />
 					</SiteHeader>
 
 					<Switch>
@@ -41,7 +41,7 @@ class App extends Component {
 					<SiteFooter>
 						<p>
 							<Link to="/recruiter">
-								<FormattedMessage id="recruiterLink.message" defaultMessage="Recruiter" />
+								<FormattedMessage id="recruiterLink" defaultMessage="Recruiter" />
 							</Link>
 						</p>
 					</SiteFooter>
