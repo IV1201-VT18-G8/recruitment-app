@@ -95,3 +95,34 @@ class ApplicantTests(APITestCase):
         self.client.force_authenticate(user=None)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_retrieve_applicant(self):
+        """An applicant can be retrieved."""
+        applicant = User.objects.create_user(
+            username="applicant", password="pass")
+        Applicant.objects.create(
+            user=applicant, social_security_number="123412343")
+        recruiter = User.objects.create_user(
+            username="recruiter", password="pass")
+        Recruiter.objects.create(user=recruiter)
+
+        self.client.force_authenticate(user=recruiter)
+        response = self.client.get(self.url + str(applicant.pk) + '/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_retrieve_applicant_not_found(self):
+        """404 is returned if applicant is not found."""
+
+        recruiter = User.objects.create_user(
+            username="recruiter", password="pass")
+        Recruiter.objects.create(user=recruiter)
+
+        self.client.force_authenticate(user=recruiter)
+        response = self.client.get(self.url + '4/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_create_applicant(self):
+        """An applicant can be created."""
+
+        self.client.force_authenticate(user=None)
+        self.client.post(self.url)

@@ -26,8 +26,7 @@ class ApplicantViewSet(viewsets.GenericViewSet):
         """
 
         applicant = get_object_or_404(self.get_queryset(), pk=pk)
-        serializer = self.get_serializer_class()
-        serializer(applicant)
+        serializer = self.get_serializer_class()(applicant)
         return Response(serializer.data)
 
     def list(self, request):
@@ -40,3 +39,10 @@ class ApplicantViewSet(viewsets.GenericViewSet):
         applicants = self.get_queryset()
         serializer = self.get_serializer_class()(applicants, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        """Create an applicant.
+
+        ### Permissions
+
+        """
