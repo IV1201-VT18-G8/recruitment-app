@@ -6,6 +6,28 @@ from recruitmentapp.apps.core.models import Applicant, Competence, Availability,
 User = get_user_model()
 
 
+# Alternative fields variable in all ModelSerializers below:
+# fields = '__all__'
+
+
+class CompetenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Competence
+        fields = ('id', 'name')
+
+
+class AvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Availability
+        fields = ('applicant', 'start', 'end')
+
+
+class CompetenceProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompetenceProfile
+        fields = ('applicant', 'competence', 'experience')
+
+
 class ApplicantSerializer(serializers.Serializer):
     """Combines fields from a User and an associated Applicant.
 
@@ -31,6 +53,8 @@ class ApplicantSerializer(serializers.Serializer):
     )
     email = serializers.EmailField(source='user.email')
     social_security_number = serializers.CharField(max_length=20)
+    competences = CompetenceSerializer(many=True)
+    availability = AvailabilitySerializer(many=True)
 
     def create(self, validated_data):
         """Create a new applicant from validated data."""
@@ -95,24 +119,3 @@ class ApplicantSerializer(serializers.Serializer):
         user.last_name = user_data.get("last_name", user.last_name)
         user.email = user_data.get("email", user.email)
         user.save()
-
-# Alternative fields variable in all ModelSerializers below:
-# fields = '__all__'
-
-
-class CompetenceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Competence
-        fields = ('id', 'name')
-
-
-class AvailabilitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Availability
-        fields = ('applicant', 'start', 'end')
-
-
-class CompetenceProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CompetenceProfile
-        fields = ('applicant', 'competence', 'experience')
