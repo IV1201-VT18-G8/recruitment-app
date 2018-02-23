@@ -1,9 +1,31 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from recruitmentapp.apps.core.models import Applicant
+from recruitmentapp.apps.core.models import Applicant, Competence, Availability, CompetenceProfile
 
 User = get_user_model()
+
+
+# Alternative fields variable in all ModelSerializers below:
+# fields = '__all__'
+
+
+class CompetenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Competence
+        fields = ('id', 'name')
+
+
+class AvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Availability
+        fields = ('applicant', 'start', 'end')
+
+
+class CompetenceProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompetenceProfile
+        fields = ('applicant', 'competence', 'experience')
 
 
 class ApplicantSerializer(serializers.Serializer):
@@ -31,6 +53,8 @@ class ApplicantSerializer(serializers.Serializer):
     )
     email = serializers.EmailField(source='user.email')
     social_security_number = serializers.CharField(max_length=20)
+    competences = CompetenceSerializer(many=True, required=False)
+    availabilities = AvailabilitySerializer(many=True, required=False)
 
     def create(self, validated_data):
         """Create a new applicant from validated data."""
