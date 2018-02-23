@@ -28,10 +28,7 @@ class ApplicantApp extends Component {
 	}
 
 	render() {
-		let navlinks = {
-			
-		};
-
+		let navlinks = {};
 		navlinks[messages[this.context.intl.locale].applicantMenyApplication] = "/"
 		navlinks[messages[this.context.intl.locale].applicantMenyProfile] = "/profile"
 		

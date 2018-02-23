@@ -28,12 +28,9 @@ class RecruiterApp extends Component {
 	}
 
 	render() {
-		let navlinks = {
-			
-		};
-
-		navlinks[messages[this.context.intl.locale].recruiterMenyApplications] = "/"
-		navlinks[messages[this.context.intl.locale].recruiterMenyProfile] = "/profile"
+		let navlinks = {};
+		navlinks[messages[this.context.intl.locale].recruiterMenyApplications] = "/recruiter"
+		navlinks[messages[this.context.intl.locale].recruiterMenyProfile] = "/recruiter/profile"
 
 		return (
 			<div>
