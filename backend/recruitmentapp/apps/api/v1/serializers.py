@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from recruitmentapp.apps.core.models import Applicant, Competence, Availability#, CompetenceProfile
+from recruitmentapp.apps.core.models import Applicant, Competence, Availability, CompetenceProfile
 
 User = get_user_model()
 
@@ -111,9 +111,8 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         model = Availability
         fields = ('applicant', 'start', 'end')
 
-'''
+
 class CompetenceProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompetenceProfile
-        fields = ('')
-'''
+        fields = ('applicant', 'competence', 'experience')
