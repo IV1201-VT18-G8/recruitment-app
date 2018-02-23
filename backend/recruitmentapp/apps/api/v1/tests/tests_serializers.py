@@ -80,7 +80,7 @@ class ApplicantSerializerTests(TestCase):
         )
         serializer = self.serializer_class(applicant)
 
-        self.assertEqual(len(serializer.data), 6)
+        self.assertEqual(len(serializer.data), 8)
         self.assertEqual(serializer.data['username'], 'testuser')
         self.assertNotEqual(serializer.data['password'], 'testpass')
         self.assertNotEqual(serializer.data['password'], '')

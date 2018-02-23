@@ -53,8 +53,8 @@ class ApplicantSerializer(serializers.Serializer):
     )
     email = serializers.EmailField(source='user.email')
     social_security_number = serializers.CharField(max_length=20)
-    competences = CompetenceSerializer(many=True)
-    availabilities = AvailabilitySerializer(many=True)
+    competences = CompetenceSerializer(many=True, required=False)
+    availabilities = AvailabilitySerializer(many=True, required=False)
 
     def create(self, validated_data):
         """Create a new applicant from validated data."""
