@@ -69,7 +69,7 @@ export default {
     'loginButtonLabel': 'Kirjaudu sisään',
     'applicantProfileHeader': 'Profiili',
     'applicantProfile': 'Hakijan profiilisivu.',
-    'applicantMenyApplication': 'Ansökan',
+    'applicantMenyApplication': 'Hakemus',
     'applicantMenyProfile': 'Profiili',
     'recruiterMenyApplications': 'Ansökningar',
     'recruiterMenyProfile': 'Profil',
