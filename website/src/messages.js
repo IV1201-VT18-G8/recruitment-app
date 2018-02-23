@@ -71,8 +71,8 @@ export default {
     'applicantProfile': 'Hakijan profiilisivu.',
     'applicantMenyApplication': 'Hakemus',
     'applicantMenyProfile': 'Profiili',
-    'recruiterMenyApplications': 'Ansökningar',
-    'recruiterMenyProfile': 'Profil',
+    'recruiterMenyApplications': 'Hakemukset',
+    'recruiterMenyProfile': 'Profiili',
     'recruiterLink': 'Rekrytoija',
     'recruiterLoginHeader': 'Rekrytoijan sisäänkirjautuminen'
   }
