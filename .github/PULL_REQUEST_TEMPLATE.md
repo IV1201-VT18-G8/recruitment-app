@@ -1,6 +1,6 @@
-Fix #\<issue number\>
+Fix #<issue number>
 
-\<additional info, if any\>
+<additional info, if any>
 
 -------------
 
@@ -10,3 +10,4 @@ Fix #\<issue number\>
 - [ ] All tests pass.
 - [ ] `pycodestyle recruitmentapp/ --exclude=migrations` (or `./scripts/lint.sh`) produces no output.
 - [ ] Includes updates to relevant documentation.
+- [ ] Public methods have docstrings.
