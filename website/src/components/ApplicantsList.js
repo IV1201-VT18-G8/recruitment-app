@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { attemptFetchApplicants } from '../actions';
+import { FormattedMessage } from 'react-intl'
 
 class ApplicantsList extends Component {
 	render() {
@@ -19,11 +20,11 @@ class ApplicantsList extends Component {
 			<table style={tableStyle}>
 				<thead>
 					<tr>
-						<th scope="col" style={cellStyle}>First name</th>
-						<th scope="col" style={cellStyle}>Last name</th>
-						<th scope="col" style={cellStyle}>Username</th>
-						<th scope="col" style={cellStyle}>Email</th>
-						<th scope="col" style={cellStyle}>SSN</th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="firstName" defaultMessage="First Name" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="lastName" defaultMessage="Last Name" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="username" defaultMessage="Username" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="email" defaultMessage="Email" /></th>
+						<th scope="col" style={cellStyle}><FormattedMessage id="socialSecurityNumber" defaultMessage="SSN" /></th>
 					</tr>
 				</thead>
 
