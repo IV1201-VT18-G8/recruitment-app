@@ -19,13 +19,13 @@ class CompetenceSerializer(serializers.ModelSerializer):
 class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Availability
-        fields = ('applicant', 'start', 'end')
+        fields = ('start', 'end')
 
 
 class CompetenceProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompetenceProfile
-        fields = ('applicant', 'competence', 'experience')
+        fields = ('competence', 'experience')
 
 
 class ApplicantSerializer(serializers.Serializer):
@@ -53,7 +53,7 @@ class ApplicantSerializer(serializers.Serializer):
     )
     email = serializers.EmailField(source='user.email')
     social_security_number = serializers.CharField(max_length=20)
-    competences = CompetenceSerializer(many=True, required=False)
+    competences = CompetenceProfileSerializer(many=True, required=False)
     availabilities = AvailabilitySerializer(many=True, required=False)
 
     def create(self, validated_data):
