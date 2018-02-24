@@ -14,6 +14,8 @@ class ApplicantSerializerTests(TestCase):
     def setUp(self):
         self.serializer_class = ApplicantSerializer
         self.competence1 = Competence.objects.create(name='competence1')
+        self.competence2 = Competence.objects.create(name='competence2')
+        self.competence3 = Competence.objects.create(name='competence3')
 
     def test_deserialize_create(self):
         data = {
@@ -26,6 +28,12 @@ class ApplicantSerializerTests(TestCase):
                 {
                     'start': '2018-02-24',
                     'end': '2018-03-24',
+                },
+            ],
+            'competences': [
+                {
+                    'competence': self.competence2.pk,
+                    'experience': 2,
                 },
             ],
         }
@@ -41,6 +49,7 @@ class ApplicantSerializerTests(TestCase):
             data['social_security_number']
         )
         self.assertEqual(applicant.availabilities.count(), 1)
+        self.assertEqual(applicant.competences.count(), 1)
 
         self.assertNotEqual(applicant.user.password, 'testpass')
         self.assertNotEqual(applicant.user.password, '')
@@ -107,6 +116,16 @@ class ApplicantSerializerTests(TestCase):
             start=datetime.datetime(year=2019, month=5, day=4),
             end=datetime.datetime(year=2019, month=7, day=3),
         )
+        CompetenceProfile.objects.create(
+            applicant=applicant,
+            competence=self.competence1,
+            experience=2.3,
+        )
+        CompetenceProfile.objects.create(
+            applicant=applicant,
+            competence=self.competence2,
+            experience=1,
+        )
 
         oldpass = user.password
 
@@ -118,6 +137,16 @@ class ApplicantSerializerTests(TestCase):
                 {
                     'start': '2018-02-24',
                     'end': '2018-03-24',
+                },
+            ],
+            'competences': [
+                {
+                    'competence': self.competence1.pk,
+                    'experience': 2,
+                },
+                {
+                    'competence': self.competence3.pk,
+                    'experience': 3.4,
                 },
             ],
         }
@@ -134,8 +163,24 @@ class ApplicantSerializerTests(TestCase):
         self.assertEqual(applicant.availabilities.first().start.year, 2018)
         self.assertEqual(applicant.availabilities.first().start.month, 2)
         self.assertEqual(applicant.availabilities.first().start.day, 24)
+        self.assertEqual(applicant.competences.count(), 2)
         self.assertNotEqual(applicant.user.password, oldpass)
         self.assertNotEqual(applicant.user.password, 'testpass')
         self.assertNotEqual(applicant.user.password, 'newpass')
         self.assertNotEqual(applicant.user.password, '')
         self.assertNotEqual(applicant.user.password, None)
+        cp1 = CompetenceProfile.objects.get(
+            applicant=applicant,
+            competence=self.competence1
+        )
+        self.assertTrue(cp1.experience, 2)
+        cp2 = CompetenceProfile.objects.get(
+            applicant=applicant,
+            competence=self.competence3
+        )
+        self.assertTrue(cp2.experience, 3.4)
+        with self.assertRaises(CompetenceProfile.DoesNotExist):
+            CompetenceProfile.objects.get(
+                applicant=applicant,
+                competence=self.competence2
+            )

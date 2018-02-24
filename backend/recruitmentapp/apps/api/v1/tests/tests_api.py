@@ -1,11 +1,11 @@
 import datetime
-import json
 
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from recruitmentapp.apps.core.models import Applicant, Recruiter, Availability
+from recruitmentapp.apps.core.models import Applicant, Recruiter, \
+    Availability, Competence, CompetenceProfile
 
 User = get_user_model()
 
@@ -349,4 +349,45 @@ class ApplicantTests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['availabilities']), 1)
-        self.assertEqual(response.data['availabilities'][0]['start'], '2018-02-24')
+        self.assertEqual(
+            response.data['availabilities'][0]['start'],
+            '2018-02-24'
+        )
+
+    def test_update_competences_self(self):
+        """An applicant can update their competences."""
+
+        competence1 = Competence.objects.create(name='competence1')
+        competence2 = Competence.objects.create(name='competence2')
+
+        data = {
+            'competences': [
+                {
+                    'competence': competence2.pk,
+                    'experience': 2,
+                },
+            ],
+        }
+
+        applicant_user = User.objects.create_user(
+            username="applicant", password="pass")
+        applicant = Applicant.objects.create(
+            user=applicant_user, social_security_number="123412343")
+        CompetenceProfile.objects.create(
+            applicant=applicant,
+            competence=competence1,
+            experience=2.3,
+        )
+
+        self.client.force_authenticate(user=applicant_user)
+        response = self.client.patch(
+            self.url + str(applicant_user.pk) + '/',
+            data=data,
+            format='json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['competences']), 1)
+        self.assertEqual(
+            response.data['competences'][0]['competence'],
+            competence2.pk
+        )

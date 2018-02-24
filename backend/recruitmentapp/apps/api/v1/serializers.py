@@ -76,8 +76,9 @@ class ApplicantSerializer(serializers.Serializer):
             social_security_number=validated_data["social_security_number"]
         )
 
-        # Availabilities
+        # Availabilities and competences
         self._update_availabilities(applicant, validated_data)
+        self._update_competences(applicant, validated_data)
 
         return applicant
 
@@ -87,8 +88,9 @@ class ApplicantSerializer(serializers.Serializer):
         # User fields
         self._update_user(instance.user, validated_data)
 
-        # Availabilities
+        # Availabilities and competences
         self._update_availabilities(instance, validated_data)
+        self._update_competences(instance, validated_data)
 
         # Applicant fields
         instance.social_security_number = validated_data.get(
@@ -115,6 +117,8 @@ class ApplicantSerializer(serializers.Serializer):
         user.save()
 
     def _update_availabilities(self, instance, validated_data):
+        """Update availabilities of applicant with validated data."""
+
         if 'availabilities' not in self.initial_data:
             return
         instance.availabilities.all().delete()
@@ -122,3 +126,33 @@ class ApplicantSerializer(serializers.Serializer):
             serializer = AvailabilitySerializer(data=availability)
             serializer.is_valid()
             serializer.save(applicant=instance)
+
+    def _update_competences(self, instance, validated_data):
+        """Update competences of applicant with validated data."""
+
+        if 'competences' not in self.initial_data:
+            return
+
+        existing = {c.competence.pk: c for c in instance.competences.all()}
+        new = {c['competence'].pk: c for c in validated_data['competences']}
+
+        # Create new and update existing competence profiles
+        for competence, competence_profile in new.items():
+            # Set to pk instead of Competence instance
+            competence_profile['competence'] = competence
+            if competence in existing:
+                serializer = CompetenceProfileSerializer(
+                    existing[competence],
+                    data=competence_profile
+                )
+            else:
+                serializer = CompetenceProfileSerializer(
+                    data=competence_profile
+                )
+            serializer.is_valid()
+            serializer.save(applicant=instance)
+
+        # Delete competence profiles
+        for competence, competence_profile in existing.items():
+            if competence not in new:
+                competence_profile.delete()

@@ -45,8 +45,11 @@ class ApplicantViewSet(viewsets.GenericViewSet):
         """Update a single applicant.
 
         ### Notes
-        The list of `availabilities` will, if present (even if empty),
+        - The list of `availabilities` will, if present (even if empty),
         completely replace all existing availabilities.
+        - The list of `competences` will, if present (event if empty),
+        completely replace (or update, where appropriate) all existing
+        competence profiles.
 
         ### Permissions
         User must be the applicant themselves, a recruiter or staff member.

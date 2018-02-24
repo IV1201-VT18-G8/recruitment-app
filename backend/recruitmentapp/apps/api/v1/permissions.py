@@ -13,6 +13,7 @@ class IsRecruiterOrSelfOrStaff(BasePermission):
 
 
 class IsApplicantSelfOrRecruiterOrStaff(BasePermission):
+    """The user is the applicant themselves, a recruiter or staff member."""
 
     def has_object_permission(self, request, view, obj):
         return request.user.is_authenticated \
