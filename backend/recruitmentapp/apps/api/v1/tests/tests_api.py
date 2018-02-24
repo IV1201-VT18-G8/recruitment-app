@@ -98,6 +98,7 @@ class ApplicantTests(APITestCase):
 
     def test_retrieve_applicant(self):
         """An applicant can be retrieved."""
+
         applicant = User.objects.create_user(
             username="applicant", password="pass")
         Applicant.objects.create(
@@ -107,6 +108,34 @@ class ApplicantTests(APITestCase):
         Recruiter.objects.create(user=recruiter)
 
         self.client.force_authenticate(user=recruiter)
+        response = self.client.get(self.url + str(applicant.pk) + '/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_retrieve_applicant_as_applicant(self):
+        """An applicant cannot retrieve other applicants."""
+
+        applicant = User.objects.create_user(
+            username="applicant", password="pass")
+        Applicant.objects.create(
+            user=applicant, social_security_number="123412343")
+        applicant2 = User.objects.create_user(
+            username="applicant2", password="pass")
+        Applicant.objects.create(
+            user=applicant2, social_security_number="123412343")
+
+        self.client.force_authenticate(user=applicant2)
+        response = self.client.get(self.url + str(applicant.pk) + '/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_retrieve_applicant_as_self(self):
+        """An applicant can retrieve themselves."""
+
+        applicant = User.objects.create_user(
+            username="applicant", password="pass")
+        Applicant.objects.create(
+            user=applicant, social_security_number="123412343")
+
+        self.client.force_authenticate(user=applicant)
         response = self.client.get(self.url + str(applicant.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -124,5 +153,33 @@ class ApplicantTests(APITestCase):
     def test_create_applicant(self):
         """An applicant can be created."""
 
+        data = {
+            'username': 'testuser',
+            'password': 'testpass',
+            'first_name': 'First',
+            'last_name': 'Last',
+            'email': 'test@example.com',
+            'social_security_number': '123456789',
+        }
+
         self.client.force_authenticate(user=None)
-        self.client.post(self.url)
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_applicant_username_exists(self):
+        """Two applicants cannot have the same username."""
+
+        user = User.objects.create_user(
+            username="testuser", password="pass")
+        data = {
+            'username': 'testuser',
+            'password': 'testpass',
+            'first_name': 'First',
+            'last_name': 'Last',
+            'email': 'test@example.com',
+            'social_security_number': '123456789',
+        }
+
+        self.client.force_authenticate(user=None)
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)

@@ -59,7 +59,13 @@ class ApplicantSerializer(serializers.Serializer):
     def create(self, validated_data):
         """Create a new applicant from validated data."""
 
-        user = self._create_or_update_user(validated_data)
+        user = User.objects.create_user(
+            username=validated_data['user']['username'],
+            password=validated_data['user']['password'],
+            first_name=validated_data['user'].get('first_name', ''),
+            last_name=validated_data['user'].get('last_name', ''),
+            email=validated_data['user']['email'],
+        )
         applicant = Applicant.objects.create(
             user=user,
             social_security_number=validated_data["social_security_number"]
@@ -81,29 +87,6 @@ class ApplicantSerializer(serializers.Serializer):
 
         instance.save()
         return instance
-
-    def _create_or_update_user(self, validated_data):
-        """Update existing User with username
-        `validated_data['user']['username']` or create a new user if no such
-        user exists.
-        """
-
-        try:
-            # Update User
-            user = User.objects.get(
-                username__exact=validated_data['user']['username']
-            )
-            self._update_user(user, validated_data)
-            return user
-        except User.DoesNotExist:
-            # Create User
-            return User.objects.create_user(
-                username=validated_data['user']['username'],
-                password=validated_data['user']['password'],
-                first_name=validated_data['user'].get('first_name', ''),
-                last_name=validated_data['user'].get('last_name', ''),
-                email=validated_data['user']['email'],
-            )
 
     def _update_user(self, user, validated_data):
         """Update user with validated applicant data."""

@@ -1,9 +1,12 @@
+from django.db import IntegrityError
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny
 
 from rest_framework.response import Response
 
-from recruitmentapp.apps.api.v1.permissions import IsRecruiterOrStaff
+from recruitmentapp.apps.api.v1.permissions import IsRecruiterOrSelfOrStaff, \
+    IsApplicantSelfOrRecruiterOrStaff
 from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer
 from recruitmentapp.apps.core.models import Applicant
 
@@ -15,17 +18,25 @@ class ApplicantViewSet(viewsets.GenericViewSet):
 
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializer
-    permission_classes = (IsRecruiterOrStaff,)
+
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = [AllowAny]
+        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            permission_classes = [IsApplicantSelfOrRecruiterOrStaff]
+        else:
+            permission_classes = [IsRecruiterOrSelfOrStaff]
+        return [permission() for permission in permission_classes]
 
     def retrieve(self, request, pk=None):
         """Retrieve a single applicant.
 
         ### Permissions
-        User must be a recruiter or staff member.
-        TODO: Enable applicants to retrieve their own data.
+        User must be the retrieved applicant, a recruiter or staff member.
         """
 
         applicant = get_object_or_404(self.get_queryset(), pk=pk)
+        self.check_object_permissions(request, applicant)
         serializer = self.get_serializer_class()(applicant)
         return Response(serializer.data)
 
@@ -44,5 +55,19 @@ class ApplicantViewSet(viewsets.GenericViewSet):
         """Create an applicant.
 
         ### Permissions
-
+        All have access.
         """
+
+        serializer = self.get_serializer_class()(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+        except IntegrityError:
+            return Response(
+                data={'detail': 'Failed to register applicant. The specified username or email address may be taken.'},
+                status=status.HTTP_409_CONFLICT,
+            )
+        return Response(
+            data=serializer.data,
+            status=status.HTTP_201_CREATED
+        )

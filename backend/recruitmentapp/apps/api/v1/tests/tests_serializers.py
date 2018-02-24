@@ -38,38 +38,6 @@ class ApplicantSerializerTests(TestCase):
         self.assertNotEqual(applicant.user.password, '')
         self.assertNotEqual(applicant.user.password, None)
 
-    def test_deserialize_create_with_existing_user(self):
-        data = {
-            'username': 'testuser',
-            'password': 'testpass',
-            'first_name': 'First',
-            'last_name': 'Last',
-            'email': 'test@example.com',
-            'social_security_number': '123456789',
-        }
-
-        user = User.objects.create(
-            username=data['username'],
-            password=data['password']
-        )
-
-        serializer = self.serializer_class(data=data)
-        serializer.is_valid()
-        serializer.save()
-
-        applicant = Applicant.objects.get(pk=user.pk)
-
-        self.assertEqual(applicant.user.username, data['username'])
-        self.assertEqual(applicant.user.email, data['email'])
-        self.assertEqual(
-            applicant.social_security_number,
-            data['social_security_number']
-        )
-
-        self.assertNotEqual(applicant.user.password, 'testpass')
-        self.assertNotEqual(applicant.user.password, '')
-        self.assertNotEqual(applicant.user.password, None)
-
     def test_serialize(self):
         user = User.objects.create(
             username='testuser',
