@@ -8,15 +8,19 @@ from .models import User, Applicant, Recruiter, Competence
 admin.site.register(Applicant, ModelAdmin)
 admin.site.register(Recruiter, ModelAdmin)
 
+
 @admin.register(Competence)
 class CompetenceAdmin(TranslatableAdmin):
     model = Competence
 
+
 # class ApplicantInline(StackedInline):
 #     model = Applicant
-#
+
+
 # class RecruiterInline(StackedInline):
 #     model = Recruiter
+
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):

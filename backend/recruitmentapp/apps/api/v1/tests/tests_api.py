@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -183,3 +182,136 @@ class ApplicantTests(APITestCase):
         self.client.force_authenticate(user=None)
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+
+    def test_destroy_applicant_as_recruiter(self):
+        """An applicant can be deleted."""
+
+        applicant_user = User.objects.create_user(
+            username="applicant", password="pass")
+        applicant = Applicant.objects.create(
+            user=applicant_user, social_security_number="123412343")
+        recruiter = User.objects.create_user(
+            username="recruiter", password="pass")
+        Recruiter.objects.create(user=recruiter)
+
+        self.client.force_authenticate(user=recruiter)
+        response = self.client.delete(self.url + str(applicant_user.pk) + '/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        with self.assertRaises(Applicant.DoesNotExist):
+            self.assertTrue(Applicant.objects.get(pk=applicant_user.pk))
+        with self.assertRaises(User.DoesNotExist):
+            self.assertTrue(User.objects.get(pk=applicant_user.pk).empty())
+
+    def test_destroy_applicant_as_self(self):
+        """An applicant can delete themselves."""
+
+        applicant_user = User.objects.create_user(
+            username="applicant", password="pass")
+        applicant = Applicant.objects.create(
+            user=applicant_user, social_security_number="123412343")
+
+        self.client.force_authenticate(user=applicant_user)
+        response = self.client.delete(self.url + str(applicant_user.pk) + '/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        with self.assertRaises(Applicant.DoesNotExist):
+            self.assertTrue(Applicant.objects.get(pk=applicant.pk))
+        with self.assertRaises(User.DoesNotExist):
+            self.assertTrue(User.objects.get(pk=applicant_user.pk).empty())
+
+    def test_destroy_applicant_other(self):
+        """An applicant cannot delete another applicant."""
+
+        applicant_user = User.objects.create_user(
+            username="applicant", password="pass")
+        applicant = Applicant.objects.create(
+            user=applicant_user, social_security_number="123412343")
+        applicant2_user = User.objects.create_user(
+            username="applicant2", password="pass")
+        applicant2 = Applicant.objects.create(
+            user=applicant2_user, social_security_number="345634563456")
+
+        self.client.force_authenticate(user=applicant2_user)
+        response = self.client.delete(self.url + str(applicant_user.pk) + '/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_partial_update_applicant_self(self):
+        """An applicant can update their own data."""
+
+        data = {
+            'first_name': 'First',
+            'social_security_number': '1337',
+            'password': '1337',
+        }
+
+        applicant_user = User.objects.create_user(
+            username="applicant", password="pass")
+        applicant = Applicant.objects.create(
+            user=applicant_user, social_security_number="123412343")
+
+        self.client.force_authenticate(user=applicant_user)
+        response = self.client.patch(
+            self.url + str(applicant_user.pk) + '/',
+            data=data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['first_name'], 'First')
+        self.assertEqual(response.data['social_security_number'], '1337')
+        self.assertNotEqual(response.data['password'], 'pass')
+        self.assertNotEqual(response.data['password'], '1337')
+        self.assertNotEqual(response.data['password'], '')
+        self.assertNotEqual(response.data['password'], None)
+
+    def test_partial_update_applicant_as_recruiter(self):
+        """A recruiter can update an applicant."""
+
+        data = {
+            'first_name': 'First',
+            'social_security_number': '1337',
+            'password': '1337',
+        }
+
+        applicant_user = User.objects.create_user(
+            username="applicant", password="pass")
+        applicant = Applicant.objects.create(
+            user=applicant_user, social_security_number="123412343")
+        recruiter = User.objects.create_user(
+            username="recruiter", password="pass")
+        Recruiter.objects.create(user=recruiter)
+
+        self.client.force_authenticate(user=recruiter)
+        response = self.client.patch(
+            self.url + str(applicant_user.pk) + '/',
+            data=data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['first_name'], 'First')
+        self.assertEqual(response.data['social_security_number'], '1337')
+        self.assertNotEqual(response.data['password'], 'pass')
+        self.assertNotEqual(response.data['password'], '1337')
+        self.assertNotEqual(response.data['password'], '')
+        self.assertNotEqual(response.data['password'], None)
+
+    def test_partial_update_applicant_other(self):
+        """An applicant cannot update another applicant."""
+
+        data = {
+            'first_name': 'First',
+            'social_security_number': '1337',
+            'password': '1337',
+        }
+
+        applicant_user = User.objects.create_user(
+            username="applicant", password="pass")
+        applicant = Applicant.objects.create(
+            user=applicant_user, social_security_number="123412343")
+        applicant2_user = User.objects.create_user(
+            username="applicant2", password="pass")
+        applicant2 = Applicant.objects.create(
+            user=applicant2_user, social_security_number="345634563456")
+
+        self.client.force_authenticate(user=applicant2_user)
+        response = self.client.patch(
+            self.url + str(applicant_user.pk) + '/',
+            data=data
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

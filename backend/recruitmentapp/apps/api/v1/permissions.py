@@ -6,11 +6,18 @@ class IsRecruiterOrSelfOrStaff(BasePermission):
 
     def has_permission(self, request, view):
         return request.user.is_authenticated \
-               and (request.user.is_recruiter or request.user.is_staff)
+            and (
+                request.user.is_recruiter
+                or request.user.is_staff
+            )
 
 
 class IsApplicantSelfOrRecruiterOrStaff(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return request.user.is_authenticated \
-               and (request.user.is_recruiter or request.user.is_staff or request.user == obj.user)
+            and (
+                request.user.is_recruiter
+                or request.user.is_staff
+                or request.user == obj.user
+            )
