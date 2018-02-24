@@ -7,10 +7,6 @@ from recruitmentapp.apps.core.models import Applicant, Competence, \
 User = get_user_model()
 
 
-# Alternative fields variable in all ModelSerializers below:
-# fields = '__all__'
-
-
 class CompetenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Competence
@@ -37,25 +33,33 @@ class ApplicantSerializer(serializers.Serializer):
 
     username = serializers.CharField(
         source='user.username',
-        max_length=150
+        max_length=150,
     )
     password = serializers.CharField(source='user.password')
     first_name = serializers.CharField(
         source='user.first_name',
         max_length=30,
         required=False,
-        allow_blank=False
+        allow_blank=False,
     )
     last_name = serializers.CharField(
         source='user.last_name',
         max_length=150,
         required=False,
-        allow_blank=False
+        allow_blank=False,
     )
     email = serializers.EmailField(source='user.email')
     social_security_number = serializers.CharField(max_length=20)
-    competences = CompetenceProfileSerializer(many=True, required=False)
-    availabilities = AvailabilitySerializer(many=True, required=False)
+    competences = CompetenceProfileSerializer(
+        many=True,
+        required=False,
+        read_only=False,
+    )
+    availabilities = AvailabilitySerializer(
+        many=True,
+        required=False,
+        read_only=False,
+    )
 
     def create(self, validated_data):
         """Create a new applicant from validated data."""
@@ -72,6 +76,9 @@ class ApplicantSerializer(serializers.Serializer):
             social_security_number=validated_data["social_security_number"]
         )
 
+        # Availabilities
+        self._update_availabilities(applicant, validated_data)
+
         return applicant
 
     def update(self, instance, validated_data):
@@ -80,13 +87,16 @@ class ApplicantSerializer(serializers.Serializer):
         # User fields
         self._update_user(instance.user, validated_data)
 
+        # Availabilities
+        self._update_availabilities(instance, validated_data)
+
         # Applicant fields
         instance.social_security_number = validated_data.get(
             "social_security_number",
             instance.social_security_number
         )
-
         instance.save()
+
         return instance
 
     def _update_user(self, user, validated_data):
@@ -103,3 +113,12 @@ class ApplicantSerializer(serializers.Serializer):
         user.last_name = user_data.get("last_name", user.last_name)
         user.email = user_data.get("email", user.email)
         user.save()
+
+    def _update_availabilities(self, instance, validated_data):
+        if 'availabilities' not in self.initial_data:
+            return
+        instance.availabilities.all().delete()
+        for availability in validated_data['availabilities']:
+            serializer = AvailabilitySerializer(data=availability)
+            serializer.is_valid()
+            serializer.save(applicant=instance)

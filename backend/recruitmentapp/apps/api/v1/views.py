@@ -1,4 +1,4 @@
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
@@ -44,6 +44,10 @@ class ApplicantViewSet(viewsets.GenericViewSet):
     def partial_update(self, request, pk=None):
         """Update a single applicant.
 
+        ### Notes
+        The list of `availabilities` will, if present (even if empty),
+        completely replace all existing availabilities.
+
         ### Permissions
         User must be the applicant themselves, a recruiter or staff member.
         """
@@ -56,7 +60,8 @@ class ApplicantViewSet(viewsets.GenericViewSet):
             partial=True
         )
         serializer.is_valid()
-        serializer.save()
+        with transaction.atomic():
+            serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None):
@@ -68,7 +73,8 @@ class ApplicantViewSet(viewsets.GenericViewSet):
 
         applicant = get_object_or_404(self.get_queryset(), pk=pk)
         self.check_object_permissions(request, applicant)
-        applicant.user.delete()
+        with transaction.atomic():
+            applicant.user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def list(self, request):
@@ -91,18 +97,19 @@ class ApplicantViewSet(viewsets.GenericViewSet):
 
         serializer = self.get_serializer_class()(data=request.data)
         serializer.is_valid(raise_exception=True)
-        try:
-            serializer.save()
-        except IntegrityError:
-            return Response(
-                data={
-                    'detail': _(
-                        'Failed to register applicant. The '
-                        'specified username or email address may be taken.'
-                    )
-                },
-                status=status.HTTP_409_CONFLICT,
-            )
+        with transaction.atomic():
+            try:
+                serializer.save()
+            except IntegrityError:
+                return Response(
+                    data={
+                        'detail': _(
+                            'Failed to register applicant. The '
+                            'specified username or email address may be taken.'
+                        )
+                    },
+                    status=status.HTTP_409_CONFLICT,
+                )
         return Response(
             data=serializer.data,
             status=status.HTTP_201_CREATED

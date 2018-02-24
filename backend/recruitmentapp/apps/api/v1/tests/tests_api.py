@@ -1,8 +1,11 @@
+import datetime
+import json
+
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from recruitmentapp.apps.core.models import Applicant, Recruiter
+from recruitmentapp.apps.core.models import Applicant, Recruiter, Availability
 
 User = get_user_model()
 
@@ -315,3 +318,35 @@ class ApplicantTests(APITestCase):
             data=data
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_availabilities_self(self):
+        """An applicant can update their availabilities."""
+
+        data = {
+            'availabilities': [
+                {
+                    'start': '2018-02-24',
+                    'end': '2018-03-24',
+                }
+            ],
+        }
+
+        applicant_user = User.objects.create_user(
+            username="applicant", password="pass")
+        applicant = Applicant.objects.create(
+            user=applicant_user, social_security_number="123412343")
+        Availability.objects.create(
+            applicant=applicant,
+            start=datetime.datetime(year=2018, month=5, day=2),
+            end=datetime.datetime(year=2018, month=6, day=2),
+        )
+
+        self.client.force_authenticate(user=applicant_user)
+        response = self.client.patch(
+            self.url + str(applicant_user.pk) + '/',
+            data=data,
+            format='json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['availabilities']), 1)
+        self.assertEqual(response.data['availabilities'][0]['start'], '2018-02-24')

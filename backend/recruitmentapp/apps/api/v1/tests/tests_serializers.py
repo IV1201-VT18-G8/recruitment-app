@@ -22,6 +22,12 @@ class ApplicantSerializerTests(TestCase):
             'first_name': 'First',
             'email': 'test@example.com',
             'social_security_number': '123456789',
+            'availabilities': [
+                {
+                    'start': '2018-02-24',
+                    'end': '2018-03-24',
+                },
+            ],
         }
         serializer = self.serializer_class(data=data)
         serializer.is_valid()
@@ -34,6 +40,7 @@ class ApplicantSerializerTests(TestCase):
             applicant.social_security_number,
             data['social_security_number']
         )
+        self.assertEqual(applicant.availabilities.count(), 1)
 
         self.assertNotEqual(applicant.user.password, 'testpass')
         self.assertNotEqual(applicant.user.password, '')
@@ -95,6 +102,11 @@ class ApplicantSerializerTests(TestCase):
             user=user,
             social_security_number='123456789'
         )
+        Availability.objects.create(
+            applicant=applicant,
+            start=datetime.datetime(year=2019, month=5, day=4),
+            end=datetime.datetime(year=2019, month=7, day=3),
+        )
 
         oldpass = user.password
 
@@ -102,6 +114,12 @@ class ApplicantSerializerTests(TestCase):
             'last_name': 'Last',
             'password': 'newpass',
             'social_security_number': '987654321',
+            'availabilities': [
+                {
+                    'start': '2018-02-24',
+                    'end': '2018-03-24',
+                },
+            ],
         }
 
         serializer = self.serializer_class(applicant, data=data, partial=True)
@@ -112,6 +130,10 @@ class ApplicantSerializerTests(TestCase):
 
         self.assertEqual(applicant.user.last_name, data['last_name'])
         self.assertEqual(applicant.social_security_number, '987654321')
+        self.assertEqual(applicant.availabilities.count(), 1)
+        self.assertEqual(applicant.availabilities.first().start.year, 2018)
+        self.assertEqual(applicant.availabilities.first().start.month, 2)
+        self.assertEqual(applicant.availabilities.first().start.day, 24)
         self.assertNotEqual(applicant.user.password, oldpass)
         self.assertNotEqual(applicant.user.password, 'testpass')
         self.assertNotEqual(applicant.user.password, 'newpass')
