@@ -47,6 +47,7 @@ class Recruiter(models.Model):
 
 class Availability(models.Model):
     """The dates an applicant is available to work."""
+
     applicant = models.ForeignKey(
         Applicant,
         on_delete=models.CASCADE,
