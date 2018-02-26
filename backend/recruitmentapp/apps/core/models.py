@@ -71,7 +71,8 @@ class Availability(models.Model):
 
 
 class Competence(TranslatableModel):
-    """The work competence an applicant has."""
+    """An area of expertise that applicants can specify their experience with.
+    """
 
     translations = TranslatedFields(
         name=models.CharField(max_length=80)
