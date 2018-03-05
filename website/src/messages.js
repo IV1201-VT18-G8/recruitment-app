@@ -25,7 +25,9 @@ export default {
     'recruiterMenyApplications': 'Applications',
     'recruiterMenyProfile': 'Profile',
     'recruiterLink': 'Recruiter',
-    'recruiterLoginHeader': 'Recruiter Login'
+    'recruiterLoginHeader': 'Recruiter Login',
+    'apiRequestFailed': 'Could not connect to the server.',
+    'apiJSONFailed': 'Could not understand the server\'s response.'
   },
   sv : {
     'applicationSiteHeader': 'Rekrytering',
@@ -53,7 +55,9 @@ export default {
     'recruiterMenyApplications': 'Ansökningar',
     'recruiterMenyProfile': 'Profil',
     'recruiterLink': 'Rekryterare',
-    'recruiterLoginHeader': 'Inloggning för rekryterare'
+    'recruiterLoginHeader': 'Inloggning för rekryterare',
+    'apiRequestFailed': 'Kunde inte ansluta till servern.',
+    'apiJSONFailed': 'Det gick inte att förstå serverns svar.'
   },
   fi : {
     'applicationSiteHeader': 'Rekrytointi',
@@ -80,6 +84,8 @@ export default {
     'recruiterMenyApplications': 'Hakemukset',
     'recruiterMenyProfile': 'Profiili',
     'recruiterLink': 'Rekrytoija',
-    'recruiterLoginHeader': 'Rekrytoijan sisäänkirjautuminen'
+    'recruiterLoginHeader': 'Rekrytoijan sisäänkirjautuminen',
+    'apiRequestFailed': 'Yhteydenotto palvelimeen epäonnistui.',
+    'apiJSONFailed': 'Palvelimen vastausta ei voitu tulkita.'
   }
 }

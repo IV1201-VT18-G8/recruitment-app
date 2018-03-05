@@ -10,18 +10,17 @@ import SiteFooter from './components/SiteFooter';
 import ProtectedRoute from './components/ProtectedRoute';
 import { connect } from 'react-redux';
 import messages from './messages';
-import detectBrowserLanguage from 'detect-browser-language';
 import { FormattedMessage } from 'react-intl';
+import { getLanguage } from './utils';
 
 
 class App extends Component {
 	constructor(props) {
 		super(props)
-		console.log(window.navigator.language)
 	}
 	render() {
 		let applicantLoginPath = "/login";
-		let lang = this.language()
+		let lang = getLanguage()
 		return (
 			<IntlProvider locale={lang} messages={
 				messages[lang]
@@ -49,11 +48,6 @@ class App extends Component {
 			</IntlProvider>
 		);
 	}
-	language() {
-		return detectBrowserLanguage().substring(0, 2).toLowerCase()
-	}
 }
-
-
 
 export default App;

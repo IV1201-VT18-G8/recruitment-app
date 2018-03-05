@@ -64,7 +64,8 @@ const recruitmentApp = (state = initState, action) => {
 		case LOGOUT_SUCCESS:
 			return Object.assign({}, state, commonUpdatedState, {
 				loginErrors: {},
-				applicants: []
+				applicants: [],
+				applicantsFetchErrors: {}
 			});
 		case APPLICANTS_FETCH_REQUEST:
 			return Object.assign({}, state, commonUpdatedState, {
@@ -73,7 +74,8 @@ const recruitmentApp = (state = initState, action) => {
 		case APPLICANTS_FETCH_SUCCESS:
 			return Object.assign({}, state, commonUpdatedState, {
 				isFetchingApplicants: false,
-				applicants: action.applicants
+				applicants: action.applicants,
+				applicantsFetchErrors: {}
 			});
 		case APPLICANTS_FETCH_FAILURE:
 			return Object.assign({}, state, commonUpdatedState, {
