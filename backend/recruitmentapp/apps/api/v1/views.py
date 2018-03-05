@@ -120,16 +120,34 @@ class ApplicantViewSet(viewsets.GenericViewSet):
 
 
 class CompetenceViewset(viewsets.ViewSet):
+    """ Viewset for applicants and recruiters to view competences.
+    """
+
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
 
     def list(self, request):
+        """ List all competences.
+        """
+
         queryset = Competence.objects.all()
         serializer = CompetenceSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
+        """ Retrieve a single competence.
+        """
+
         queryset = Competence.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = CompetenceSerializer(user)
-        return Response(serializer.data)
+        competence = get_object_or_404(queryset, pk=pk)
+        serializer = CompetenceSerializer(competence)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        """ Create a new competence.
+        """
+
+        serializer = self.get_serializer_class()(data=request.data)
+        serializer.save()
+        return Response(data=serializer.data,
+                        status=status.HTTP_201_CREATED)
