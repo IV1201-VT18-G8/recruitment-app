@@ -409,9 +409,12 @@ class CompetenceTest(APITestCase):
         """All authenticated users can list competences."""
 
         Competence.objects.create(name="Skottkärreförare")
-        user = User.objects.create_user(username="usernamec2", password="passwordc2")
-        applicant = Applicant.objects.create(user=user, social_security_number="234-56-1982")
+        user = User.objects.create_user(
+            username="usernamec2",
+            password="passwordc2")
+        applicant = Applicant.objects.create(
+            user=user,
+            social_security_number="234-56-1982")
         self.client.force_authenticate(user=user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-

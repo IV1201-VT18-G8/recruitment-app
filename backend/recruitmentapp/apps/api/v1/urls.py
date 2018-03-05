@@ -6,7 +6,8 @@ from rest_framework import routers, permissions
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, \
     verify_jwt_token
 
-from recruitmentapp.apps.api.v1.views import ApplicantViewSet, CompetenceViewSet
+from recruitmentapp.apps.api.v1.views import ApplicantViewSet, \
+    CompetenceViewSet
 
 schema_view = get_schema_view(
    openapi.Info(
