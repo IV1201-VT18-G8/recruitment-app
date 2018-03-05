@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { attemptLogin } from '../actions';
-import { bindActionCreators } from 'redux';
-import * as AuthActions from '../actions';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import ErrorMessage, { errMsgStyle } from './ErrorMessage';
 
+/**
+ * A login form.
+ *
+ * Calls `this.props.onLoginSubmit` on submit.
+ * Redirects to `this.props.onLoginRedirect` when user is authenticated.
+ */
 class LoginForm extends Component {
 	render() {
 		if (this.props.isAuthenticated) {

@@ -2,6 +2,9 @@ import { API_ROOT_URL, LOCAL_STORAGE_AUTH_TOKEN_NAME } from './consts';
 import { getLanguage } from './utils';
 import messages from './messages';
 
+/**
+ * Returns appropriate HTTP headers for authenticated API requests.
+ */
 const authenticatedRequestHeaders = () => {
 	let headers = {
 		'Accept': 'application/json'
@@ -13,6 +16,10 @@ const authenticatedRequestHeaders = () => {
 	return new Headers(headers);
 }
 
+/**
+ * Performs an HTTP request and returns the received JSON or other data that
+ * describes the result.
+ */
 const fetchJSON = (url, request) => {
 	let lang = getLanguage();
 	return fetch(url, request)
@@ -41,6 +48,9 @@ const fetchJSON = (url, request) => {
 		});
 }
 
+/**
+ * A set of functions that perform API requests.
+ */
 export default {
 	login: {
 		post: credentials => {

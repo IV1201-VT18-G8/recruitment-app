@@ -13,7 +13,7 @@ import api from './api';
 
 
 /**
- * Login
+ * Login and logout
  */
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
@@ -43,6 +43,9 @@ export const receiveLogout = () => ({
 	type: LOGOUT_SUCCESS
 })
 
+/**
+ * Dispatch Redux actions in order to facilitate a login attempt.
+ */
 export const attemptLogin = (credentials) => {
 	return dispatch => {
 		dispatch(requestLogin());
@@ -100,6 +103,10 @@ export const applicantsFetchError = (applicantsFetchErrors) => ({
 	applicantsFetchErrors
 });
 
+/**
+ * Dispatch Redux actions in order to facilitate a fetch of a list of
+ * applicants.
+ */
 export const attemptFetchApplicants = () => {
 	return dispatch => {
 		dispatch(requestApplicants());

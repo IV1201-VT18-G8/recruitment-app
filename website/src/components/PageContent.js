@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/**
+ * Container for page-specific content.
+ */
 class PageContent extends Component {
 	render() {
 		let mainStyle = {
