@@ -22,6 +22,7 @@ class ApplicantSerializerTests(TestCase):
             'username': 'testuser',
             'password': 'testpass',
             'first_name': 'First',
+            'last_name': 'Last',
             'email': 'test@example.com',
             'social_security_number': '123456789',
             'availabilities': [

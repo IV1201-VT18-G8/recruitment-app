@@ -39,13 +39,13 @@ class ApplicantSerializer(serializers.Serializer):
     first_name = serializers.CharField(
         source='user.first_name',
         max_length=30,
-        required=False,
+        required=True,
         allow_blank=False,
     )
     last_name = serializers.CharField(
         source='user.last_name',
         max_length=150,
-        required=False,
+        required=True,
         allow_blank=False,
     )
     email = serializers.EmailField(source='user.email')
