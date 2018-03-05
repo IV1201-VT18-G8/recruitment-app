@@ -2,12 +2,13 @@ from django.db import IntegrityError, transaction
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from recruitmentapp.apps.api.v1.permissions import IsRecruiterOrSelfOrStaff, \
     IsApplicantSelfOrRecruiterOrStaff
-from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer, CompetenceSerializer
+from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer, \
+    CompetenceSerializer
 from recruitmentapp.apps.core.models import Applicant, Competence
 
 
@@ -125,6 +126,7 @@ class CompetenceViewset(viewsets.ViewSet):
 
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
+    permission_classes = (IsAuthenticated, )
 
     def list(self, request):
         """ List all competences.
@@ -149,5 +151,6 @@ class CompetenceViewset(viewsets.ViewSet):
 
         serializer = self.get_serializer_class()(data=request.data)
         serializer.save()
-        return Response(data=serializer.data,
-                        status=status.HTTP_201_CREATED)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
