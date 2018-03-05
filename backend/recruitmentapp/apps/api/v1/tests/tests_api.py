@@ -391,3 +391,27 @@ class ApplicantTests(APITestCase):
             response.data['competences'][0]['competence'],
             competence2.pk
         )
+
+
+class CompetenceTest(APITestCase):
+    def setUp(self):
+        self.url = "/api/v1/competences/"
+
+    def test_get_competences_unauthenticated(self):
+        """Unauthenticated users cannot list competences."""
+
+        Competence.objects.create(name="Korvgrillning")
+        self.client.force_authenticate(user=None)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_competences_authenticated_applicant(self):
+        """All authenticated users can list competences."""
+
+        Competence.objects.create(name="Skottkärreförare")
+        user = User.objects.create_user(username="usernamec2", password="passwordc2")
+        applicant = Applicant.objects.create(user=user, social_security_number="234-56-1982")
+        self.client.force_authenticate(user=user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
