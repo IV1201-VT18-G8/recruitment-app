@@ -7,8 +7,8 @@ from rest_framework.response import Response
 
 from recruitmentapp.apps.api.v1.permissions import IsRecruiterOrSelfOrStaff, \
     IsApplicantSelfOrRecruiterOrStaff
-from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer
-from recruitmentapp.apps.core.models import Applicant
+from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer, CompetenceSerializer
+from recruitmentapp.apps.core.models import Applicant, Competence
 
 
 class ApplicantViewSet(viewsets.GenericViewSet):
@@ -117,3 +117,19 @@ class ApplicantViewSet(viewsets.GenericViewSet):
             data=serializer.data,
             status=status.HTTP_201_CREATED
         )
+
+
+class CompetenceViewset(viewsets.ViewSet):
+    queryset = Competence.objects.all()
+    serializer_class = CompetenceSerializer
+
+    def list(self, request):
+        queryset = Competence.objects.all()
+        serializer = CompetenceSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Competence.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = CompetenceSerializer(user)
+        return Response(serializer.data)
