@@ -22,16 +22,17 @@ msgstr ""
 msgid ""
 "Failed to register applicant. The specified username or email address may be "
 "taken."
-msgstr ""
+msgstr "Hakijan rekiteröinti epäonnistui. Annettu käyttäjänimi tai "
+"sähköpostiosoite saattaa olla varattu."
 
 #: recruitmentapp/settings/base.py:122
 msgid "English"
-msgstr ""
+msgstr "English"
 
 #: recruitmentapp/settings/base.py:123
 msgid "Swedish"
-msgstr ""
+msgstr "Swedish"
 
 #: recruitmentapp/settings/base.py:124
 msgid "Finnish"
-msgstr ""
+msgstr "Finnish"
