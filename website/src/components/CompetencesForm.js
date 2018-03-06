@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { attemptFetchCompetences } from '../actions';
+import ErrorMessage from './ErrorMessage';
 
 let errMsgStyle = {
 	color: '#ce1717',
@@ -48,24 +49,40 @@ class CompetencesForm extends Component {
 		}
 
 	render() {
-		let competencesListListStyle = {
-			listStyleType: 'none'
-		}
 
 		return (
 			<div>
 				<FormattedMessage id="competenceMessageLabel" defaultMessage="Competences " />
+				{this.renderErrors('request')}
+				{this.renderErrors('detail')}
+				{this.renderCompetences()}
+			</div>
+
+		);
+	}
+
+	renderCompetences() {
+		if (this.props.competences.length === 0) {
+			return
+		}
+
+		let competencesListListStyle = {
+			listStyleType: 'none'
+		}
+
+		return(
+			<div>
 				<button type="button" onClick={this.onAddBtnClick}>
 					<FormattedMessage id="addCompetenceButtonLabel" defaultMessage="+" />
 				</button>
 				<ul style={competencesListListStyle}>
 					{this.state.competencesList.map((competences, id) =>
 						<li key={id}>
-              <select name="competences">
-								{this.props.comptences.map((competence, id) =>
+							<select name="competences">
+								{this.props.competences.map((competence, id) =>
 									<option key={competence.id}>{competence.name}</option>
 								)}
-              </select>
+							</select>
 							<button id={id} type="button" onClick={this.onDeleteBtnClick.bind(this, id)}>
 								<FormattedMessage id="removeCompetenceButtonLabel" defaultMessage="x" />
 							</button>
@@ -74,8 +91,16 @@ class CompetencesForm extends Component {
 				}
 				</ul>
 			</div>
+		)
+	}
 
-		);
+	renderErrors(fieldName) {
+		if (!this.props.competencesFetchErrors[fieldName]) {
+			return
+		}
+		return (
+			<ErrorMessage>{this.props.competencesFetchErrors[fieldName]}</ErrorMessage>
+		)
 	}
 
 	inputStyle(fieldName) {
@@ -92,11 +117,13 @@ class CompetencesForm extends Component {
 
 CompetencesForm.propTypes = {
 	competences: PropTypes.array.isRequired,
+	competencesFetchErrors: PropTypes.object.isRequired,
 	onRender: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
-	competences: state.competences
+	competences: state.competences,
+	competencesFetchErrors: state.competencesFetchErrors
 });
 
 const mapDispatchToProps = dispatch => {

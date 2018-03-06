@@ -149,8 +149,7 @@ export const attemptFetchCompetences = () => {
 		api.competences.get()
 			.then(({ ok, body }) => {
 				if (!ok) {
-					dispatch(competencesFetchError());
-					return Promise.reject(body);
+					dispatch(competencesFetchError(body));
 				} else {
 					dispatch(receiveCompetences(body));
 				}

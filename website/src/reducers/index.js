@@ -102,7 +102,8 @@ const recruitmentApp = (state = initState, action) => {
 			case COMPETENCES_FETCH_SUCCESS:
 				return Object.assign({}, state, commonUpdatedState, {
 					isFetchingCompetences: false,
-					competences: action.competences
+					competences: action.competences,
+					competencesFetchErrors: {}
 				});
 			case COMPETENCES_FETCH_FAILURE:
 				return Object.assign({}, state, commonUpdatedState, {
