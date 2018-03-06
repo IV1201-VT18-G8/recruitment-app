@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { attemptFetchApplicants } from '../actions';
 import { FormattedMessage } from 'react-intl';
-import ErrorMessage, { errMsgStyle } from './ErrorMessage';
+import ErrorMessage from './ErrorMessage';
 
 let tableStyle = {
 	borderCollapse: 'collapse'
@@ -15,6 +15,9 @@ let cellStyle = {
 	textAlign: 'left'
 }
 
+/**
+ * A table that lists applicants from `state.applicants`.
+ */
 class ApplicantsList extends Component {
 	render() {
 		return (
@@ -36,7 +39,7 @@ class ApplicantsList extends Component {
 	}
 
 	renderTable() {
-		if (this.props.applicants.length == 0) {
+		if (this.props.applicants.length === 0) {
 			return
 		}
 

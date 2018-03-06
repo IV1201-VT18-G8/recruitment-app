@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {DefaultRoute, Switch, Route, Link} from 'react-router-dom';
-import Navigation from '../components/Navigation';
 import PageHeader from '../components/PageHeader';
 import ApplicantsList from '../components/ApplicantsList';
 import { FormattedMessage } from 'react-intl';
 
-class RecruiterAppApplications extends Component {
+/**
+ * Page that displays all applications to a recuirter.
+ */
+class RecruiterApplications extends Component {
 	render() {
 		return (
 			<div>
@@ -15,4 +16,4 @@ class RecruiterAppApplications extends Component {
 		);
 	}
 }
-export default RecruiterAppApplications;
+export default RecruiterApplications;

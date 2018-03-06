@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 
+/**
+ * Global site header.
+ */
 class SiteHeader extends Component {
 	render() {
 		let headerStyle = {

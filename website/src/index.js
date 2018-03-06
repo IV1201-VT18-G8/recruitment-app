@@ -4,7 +4,6 @@ import 'normalize.css';
 import Root from './Root';
 import registerServiceWorker from './registerServiceWorker';
 import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
 import reducer from './reducers';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';

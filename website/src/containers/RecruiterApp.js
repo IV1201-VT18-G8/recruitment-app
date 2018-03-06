@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import {DefaultRoute, Switch, Route, Link} from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import PageContent from '../components/PageContent';
-import RecruiterAppApplications from '../pages/RecruiterAppApplications';
-import RecruiterAppProfile from '../pages/RecruiterAppProfile';
+import RecruiterApplications from '../pages/RecruiterApplications';
+import RecruiterProfile from '../pages/RecruiterProfile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import messages from '../messages';
 
+/**
+ * Container for auth protected pages of the recruiter section of the site.
+ */
 class RecruiterApp extends Component {
 	renderNotAuthorized() {
 		return (
@@ -21,8 +24,8 @@ class RecruiterApp extends Component {
 	renderAuthorized() {
 		return (
 			<Switch>
-				<Route path={this.props.match.url + "/profile"} component={RecruiterAppProfile} />
-				<Route component={RecruiterAppApplications} />
+				<Route path={this.props.match.url + "/profile"} component={RecruiterProfile} />
+				<Route component={RecruiterApplications} />
 			</Switch>
 		)
 	}
