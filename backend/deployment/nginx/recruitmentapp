@@ -1,0 +1,33 @@
+server {
+    listen         80;
+    server_name    localhost;
+    return         301 https://$server_name:8002$request_uri;
+}
+
+server {
+    listen              443 ssl;
+    server_name         localhost;
+    keepalive_timeout   70;
+    access_log          on;
+    ssl_certificate     /recruitmentapp/deployment/ssl/recruitmentapp.crt;
+    ssl_certificate_key /recruitmentapp/deployment/ssl/recruitmentapp.key;
+
+    # add Strict-Transport-Security to prevent man in the middle attacks
+    add_header Strict-Transport-Security "max-age=31536000";
+
+    location /static/ {
+        alias /static/;
+    }
+
+    #location /media/ {
+    #    alias /data/media/;
+    #}
+
+    location / {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_set_header X-Forwarded-Host $server_name;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Real-IP $remote_addr;
+        add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
+    }
+}
