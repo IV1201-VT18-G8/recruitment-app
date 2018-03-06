@@ -1,6 +1,6 @@
 export default {
   en : {
-    'applicationSiteHeader': 'Recruiter',
+    'siteHeader': 'Recruitment',
     'applicant': 'Applicant page.',
     'loginHeader': 'Applicant login',
     'login': 'Log in',
@@ -30,7 +30,7 @@ export default {
     'apiJSONFailed': 'Could not understand the server\'s response.'
   },
   sv : {
-    'applicationSiteHeader': 'Rekrytering',
+    'siteHeader': 'Rekrytering',
     'applicant': 'Sida för ansökan.',
     'loginHeader': 'Inloggning',
     'login': 'Logga in',
@@ -60,7 +60,7 @@ export default {
     'apiJSONFailed': 'Det gick inte att förstå serverns svar.'
   },
   fi : {
-    'applicationSiteHeader': 'Rekrytointi',
+    'siteHeader': 'Rekrytointi',
     'applicant': 'Hakijan sivu.',
     'loginHeader': 'Hakijan sisäänkirjautuminen',
     'login': 'Kirjaudu sisään',
