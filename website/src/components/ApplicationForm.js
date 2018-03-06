@@ -6,6 +6,7 @@ import * as AuthActions from '../actions';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import AvailabilityList from './AvailabilityList';
 
 let errMsgStyle = {
 	color: '#ce1717',
@@ -52,25 +53,7 @@ class ApplicationForm extends Component {
 					</label>
 					<input type="email" ref="emailAdress" id="emailAdress" style={this.inputStyle('emailAdress')} />
 				</p>
-				<FormattedMessage id="availabilityMessageLabel" defaultMessage="Available " />
-				<button type="submit">
-					<FormattedMessage id="addAvailabilityButtonLabel" defaultMessage="Add" />
-				</button>
-				<ul>
-					<li>
-						<label htmlFor="availabilityFrom" style={availabilityStyle}>
-								<FormattedMessage id="availabilityFromLabel" defaultMessage="From" />
-						</label>
-						<input type="date" ref="availabilityFrom" id="availabilityFrom" style={this.inputStyle('availabilityFrom')} />
-						<label htmlFor="availabilityTo">
-								<FormattedMessage id="availabilityToLabel" defaultMessage=" To " />
-						</label>
-						<input type="date" ref="availabilityTo" id="availabilityTo" style={this.inputStyle('availabilityTo')} />
-						<button type="submit">
-							<FormattedMessage id="removeAvailabilityButtonLabel" defaultMessage="x" />
-						</button>
-					</li>
-				</ul>
+				<AvailabilityList />
 
 				<button type="submit">
 					<FormattedMessage id="applyButtonLabel" defaultMessage="Apply" />
