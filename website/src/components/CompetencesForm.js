@@ -49,7 +49,6 @@ class CompetencesForm extends Component {
 		}
 
 	render() {
-
 		return (
 			<div>
 				<FormattedMessage id="competenceMessageLabel" defaultMessage="Competences " />
@@ -57,14 +56,17 @@ class CompetencesForm extends Component {
 					<FormattedMessage id="addCompetenceButtonLabel" defaultMessage="+" />
 				</button>
 				{this.renderErrors('request')}
+				{this.renderErrors('detail')}
 				{this.renderCompetences()}
 			</div>
 		);
 	}
 
 	renderCompetences() {
-		if (this.props.competences.length === 0) {
-			return
+		if (this.props.competences.length === 0 && Object.keys(this.props.competencesFetchErrors).length === 0) {
+			return (
+				<p><FormattedMessage id="noCompetences" defaultMessage="No competences to be chosen from were found" /></p>
+			)
 		}
 
 		let competencesListListStyle = {
@@ -96,7 +98,6 @@ class CompetencesForm extends Component {
 	}
 
 	renderErrors(fieldName) {
-		console.log(this)
 		if (!this.props.competencesFetchErrors[fieldName]) {
 			return
 		}

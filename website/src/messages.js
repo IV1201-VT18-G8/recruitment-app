@@ -27,7 +27,8 @@ export default {
     'recruiterLink': 'Recruiter',
     'recruiterLoginHeader': 'Recruiter Login',
     'apiRequestFailed': 'Could not connect to the server.',
-    'apiJSONFailed': 'Could not understand the server\'s response.'
+    'apiJSONFailed': 'Could not understand the server\'s response.',
+    'noCompetences': 'No competence choices.'
   },
   sv : {
     'applicationSiteHeader': 'Rekrytering',
@@ -57,7 +58,8 @@ export default {
     'recruiterLink': 'Rekryterare',
     'recruiterLoginHeader': 'Inloggning för rekryterare',
     'apiRequestFailed': 'Kunde inte ansluta till servern.',
-    'apiJSONFailed': 'Det gick inte att förstå serverns svar.'
+    'apiJSONFailed': 'Det gick inte att förstå serverns svar.',
+    'noCompetences': 'Inga kompetensalternativ.'
   },
   fi : {
     'applicationSiteHeader': 'Rekrytointi',
@@ -86,6 +88,7 @@ export default {
     'recruiterLink': 'Rekrytoija',
     'recruiterLoginHeader': 'Rekrytoijan sisäänkirjautuminen',
     'apiRequestFailed': 'Yhteydenotto palvelimeen epäonnistui.',
-    'apiJSONFailed': 'Palvelimen vastausta ei voitu tulkita.'
+    'apiJSONFailed': 'Palvelimen vastausta ei voitu tulkita.',
+    'noCompetences': 'Ei pätevyysvaihtoehtoja.'
   }
 }

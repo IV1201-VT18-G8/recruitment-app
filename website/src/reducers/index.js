@@ -46,7 +46,7 @@ let initState = {
 	applicantsFetchErrors: {},
 	applicants: [],
 	isFetchingCompetences: false,
-	CompetencesFetchErrors: {},
+	competencesFetchErrors: {},
 	competences: []
 };
 
