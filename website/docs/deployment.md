@@ -4,7 +4,7 @@ Deployment of Website
 On the Development Machine
 --------------------------
 
-In `deployment/default.conf`, set `server_name` (2 occurrences) to the domain
+In `deployment/nginx/default.conf`, set `server_name` (2 occurrences) to the domain
 name of your production server. Also check or remove the HTTPS port number on
 the HTTP redirect statement (line 4, at the time of writing).
 
