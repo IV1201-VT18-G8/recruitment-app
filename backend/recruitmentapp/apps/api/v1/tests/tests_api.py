@@ -441,3 +441,34 @@ class CompetenceTest(APITestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url + '123/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_create_competence_as_recruiter(self):
+        """Recruiter and staff can create a competence."""
+
+        data = {
+            'name': 'Körkort'
+        }
+        recruiter = Recruiter.objects.create(user=self.user)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_competence_as_staff(self):
+        """Recruiter and staff can create a competence."""
+        staff = User.objects.create_user(username="staffname", is_staff=True)
+        data = {
+            'name': 'Busskörkort'
+        }
+        self.client.force_authenticate(user=staff)
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_competence_unauthenticated(self):
+        """Only authenticated recruiter and staff can create a competence."""
+
+        data = {
+            'name': 'Lastbilskort'
+        }
+        self.client.force_authenticate(user=None)
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

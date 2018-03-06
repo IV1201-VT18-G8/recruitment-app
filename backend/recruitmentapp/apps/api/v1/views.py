@@ -120,7 +120,7 @@ class ApplicantViewSet(viewsets.GenericViewSet):
         )
 
 
-class CompetenceViewSet(viewsets.ViewSet):
+class CompetenceViewSet(viewsets.ModelViewSet):
     """Viewset for applicants and recruiters to view competences.
     """
 
@@ -165,5 +165,6 @@ class CompetenceViewSet(viewsets.ViewSet):
         """
 
         serializer = self.get_serializer_class()(data=request.data)
+        serializer.is_valid()
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
