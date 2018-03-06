@@ -16,7 +16,7 @@ let availabilityStyle = {
 	marginRight: '5px'
 };
 
-class AvailabilityList extends Component {
+class AvailabilitiesForm extends Component {
 
 	constructor(props) {
 		super(props)
@@ -58,7 +58,7 @@ class AvailabilityList extends Component {
 			<div>
 				<FormattedMessage id="availabilityMessageLabel" defaultMessage="Available " />
 				<button type="button" onClick={this.onAddBtnClick}>
-					<FormattedMessage id="addAvailabilityButtonLabel" defaultMessage="Add" />
+					<FormattedMessage id="addAvailabilityButtonLabel" defaultMessage="+" />
 				</button>
 				<ul style={availabilityListStyle}>
 					{this.state.availabilitiesList.map((availability, id) =>
@@ -91,4 +91,4 @@ class AvailabilityList extends Component {
 	}
 }
 
-export default AvailabilityList;
+export default AvailabilitiesForm;

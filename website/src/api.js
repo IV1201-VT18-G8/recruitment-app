@@ -51,5 +51,16 @@ export default {
 			};
 			return fetchJSON(url, request);
 		}
+	},
+	competences: {
+		get: () => {
+			let url = API_ROOT_URL + '/competences/';
+			let request = {
+				method: 'GET',
+				headers: authenticatedRequestHeaders()
+			};
+			return fetchJSON(url, request);
+		}
 	}
+
 }

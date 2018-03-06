@@ -16,6 +16,10 @@ export const APPLICANTS_FETCH_REQUEST = 'APPLICANTS_FETCH_REQUEST';
 export const APPLICANTS_FETCH_SUCCESS = 'APPLICANTS_FETCH_SUCCESS';
 export const APPLICANTS_FETCH_FAILURE = 'APPLICANTS_FETCH_FAILURE';
 
+export const COMPETENCES_FETCH_REQUEST = 'COMPETENCES_FETCH_REQUEST';
+export const COMPETENCES_FETCH_SUCCESS = 'COMPETENCES_FETCH_SUCCESS';
+export const COMPETENCES_FETCH_FAILURE = 'COMPETENCES_FETCH_FAILURE';
+
 const getParsedFromLocalStorage = (name) => {
 	let raw = localStorage.getItem(name);
 	return JSON.parse(raw);
@@ -38,7 +42,10 @@ let initState = {
 	loginErrors: {},
 	isFetchingApplicants: false,
 	applicantsFetchErrors: {},
-	applicants: []
+	applicants: [],
+	isFetchingCompetences: false,
+	CompetencesFetchErrors: {},
+	competences: []
 };
 
 const recruitmentApp = (state = initState, action) => {
@@ -81,6 +88,21 @@ const recruitmentApp = (state = initState, action) => {
 				applicantsFetchErrors: action.applicantsFetchErrors,
 				applicants: []
 			});
+			case COMPETENCES_FETCH_REQUEST:
+				return Object.assign({}, state, commonUpdatedState, {
+					isFetchingCompetences: true
+				});
+			case COMPETENCES_FETCH_SUCCESS:
+				return Object.assign({}, state, commonUpdatedState, {
+					isFetchingCompetences: false,
+					competences: action.competences
+				});
+			case COMPETENCES_FETCH_FAILURE:
+				return Object.assign({}, state, commonUpdatedState, {
+					isFetchingCompetences: false,
+					competencesFetchErrors: action.competencesFetchErrors,
+					competences: []
+				});
 		default:
 			return state;
 	}

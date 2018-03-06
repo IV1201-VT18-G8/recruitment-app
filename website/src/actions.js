@@ -114,3 +114,40 @@ export const attemptFetchApplicants = () => {
 			})
 	}
 };
+
+/**
+ * Fetch multiple competences
+ */
+
+export const COMPETENCES_FETCH_REQUEST = 'COMPETENCES_FETCH_REQUEST';
+export const COMPETENCES_FETCH_SUCCESS = 'COMPETENCES_FETCH_SUCCESS';
+export const COMPETENCES_FETCH_FAILURE = 'COMPETENCES_FETCH_FAILURE';
+
+export const requestCompetences = () => ({
+	type: COMPETENCES_FETCH_REQUEST,
+});
+
+export const receiveCompetences = (competences) => ({
+	type: COMPETENCES_FETCH_SUCCESS,
+	competences
+});
+
+export const competencesFetchError = (competencesFetchErrors) => ({
+	type: COMPETENCES_FETCH_FAILURE,
+	competencesFetchErrors
+});
+
+export const attemptFetchCompetences = () => {
+	return dispatch => {
+		dispatch(requestCompetences());
+		api.competences.get()
+			.then(({ ok, body }) => {
+				if (!ok) {
+					dispatch(competencesFetchError());
+					return Promise.reject(body);
+				} else {
+					dispatch(receiveCompetences(body));
+				}
+			})
+	}
+};
