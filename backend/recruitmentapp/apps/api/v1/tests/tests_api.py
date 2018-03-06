@@ -391,3 +391,84 @@ class ApplicantTests(APITestCase):
             response.data['competences'][0]['competence'],
             competence2.pk
         )
+
+
+class CompetenceTest(APITestCase):
+    def setUp(self):
+        self.url = "/api/v1/competences/"
+        self.user = User.objects.create_user(
+            username="usernameCt",
+            password="passwordCt")
+        self.competence = Competence.objects.create(name="Skottkärreförare")
+
+    def test_list_competences_unauthenticated(self):
+        """Unauthenticated users cannot list competences."""
+
+        self.client.force_authenticate(user=None)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_list_competences_authenticated_applicant(self):
+        """All authenticated users can list competences."""
+
+        applicant = Applicant.objects.create(
+            user=self.user,
+            social_security_number="234-56-1982")
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_retrieve_competence_authenticated(self):
+        """All authenticated users can retrieve a competence."""
+
+        applicant = Applicant.objects.create(
+            user=self.user,
+            social_security_number="234-56-1123")
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url + str(self.competence.id) + '/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_retrieve_competence_unauthenticated(self):
+        """Unauthenticated users cannot retrieve a competence."""
+
+        response = self.client.get(self.url + str(self.competence.id) + '/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_retrieve_competence_not_found(self):
+        """Non existing competences cannot be retrieved."""
+
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url + '123/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_create_competence_as_recruiter(self):
+        """Recruiter and staff can create a competence."""
+
+        data = {
+            'name': 'Körkort'
+        }
+        recruiter = Recruiter.objects.create(user=self.user)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_competence_as_staff(self):
+        """Recruiter and staff can create a competence."""
+        staff = User.objects.create_user(username="staffname", is_staff=True)
+        data = {
+            'name': 'Busskörkort'
+        }
+        self.client.force_authenticate(user=staff)
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_competence_unauthenticated(self):
+        """Only authenticated recruiter and staff can create a competence."""
+
+        data = {
+            'name': 'Lastbilskort'
+        }
+        self.client.force_authenticate(user=None)
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

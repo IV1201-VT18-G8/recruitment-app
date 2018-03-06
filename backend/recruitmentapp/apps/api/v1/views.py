@@ -2,13 +2,14 @@ from django.db import IntegrityError, transaction
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from recruitmentapp.apps.api.v1.permissions import IsRecruiterOrSelfOrStaff, \
+from recruitmentapp.apps.api.v1.permissions import IsRecruiterOrStaff, \
     IsApplicantSelfOrRecruiterOrStaff
-from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer
-from recruitmentapp.apps.core.models import Applicant
+from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer, \
+    CompetenceSerializer
+from recruitmentapp.apps.core.models import Applicant, Competence
 
 
 class ApplicantViewSet(viewsets.GenericViewSet):
@@ -26,7 +27,7 @@ class ApplicantViewSet(viewsets.GenericViewSet):
                 'retrieve', 'update', 'partial_update', 'destroy']:
             permission_classes = [IsApplicantSelfOrRecruiterOrStaff]
         else:
-            permission_classes = [IsRecruiterOrSelfOrStaff]
+            permission_classes = [IsRecruiterOrStaff]
         return [permission() for permission in permission_classes]
 
     def retrieve(self, request, pk=None):
@@ -117,3 +118,53 @@ class ApplicantViewSet(viewsets.GenericViewSet):
             data=serializer.data,
             status=status.HTTP_201_CREATED
         )
+
+
+class CompetenceViewSet(viewsets.ModelViewSet):
+    """Viewset for applicants and recruiters to view competences.
+    """
+
+    queryset = Competence.objects.all()
+    serializer_class = CompetenceSerializer
+
+    def get_permissions(self):
+        permission_classes = [IsAuthenticated]
+        if self.action == 'create':
+            permission_classes.append(IsRecruiterOrStaff)
+        return [permission() for permission in permission_classes]
+
+    def list(self, request):
+        """List all competences.
+
+        ### Permissions
+        All authenticated users.
+        """
+
+        queryset = Competence.objects.all()
+        serializer = CompetenceSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        """Retrieve a single competence.
+
+        ### Permissions
+        All authenticated users.
+
+        """
+
+        queryset = Competence.objects.all()
+        competence = get_object_or_404(queryset, pk=pk)
+        serializer = CompetenceSerializer(competence)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        """Create a new competence.
+
+        ### Permissions
+        All authenticated recruiters and staff.
+        """
+
+        serializer = self.get_serializer_class()(data=request.data)
+        serializer.is_valid()
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)

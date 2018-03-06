@@ -6,7 +6,8 @@ from rest_framework import routers, permissions
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, \
     verify_jwt_token
 
-from recruitmentapp.apps.api.v1.views import ApplicantViewSet
+from recruitmentapp.apps.api.v1.views import ApplicantViewSet, \
+    CompetenceViewSet
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -24,6 +25,7 @@ schema_view = get_schema_view(
 
 router = routers.SimpleRouter()
 router.register(r'applicants', ApplicantViewSet)
+router.register(r'competences', CompetenceViewSet)
 
 urlpatterns = [
     path('login/', obtain_jwt_token),

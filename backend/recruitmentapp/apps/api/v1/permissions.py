@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class IsRecruiterOrSelfOrStaff(BasePermission):
+class IsRecruiterOrStaff(BasePermission):
     """The user is a recruiter or staff member."""
 
     def has_permission(self, request, view):
