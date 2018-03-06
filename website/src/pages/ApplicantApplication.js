@@ -5,7 +5,10 @@ import PageContent from '../components/PageContent';
 import PageHeader from '../components/PageHeader';
 import { FormattedMessage } from 'react-intl';
 
-class ApplicantAppProfile extends Component {
+/**
+ * Page that displays the application of an applicant.
+ */
+class ApplicantApplication extends Component {
 	render() {
 		return (
 			<div>
@@ -20,4 +23,4 @@ class ApplicantAppProfile extends Component {
 		);
 	}
 }
-export default ApplicantAppProfile;
+export default ApplicantApplication;

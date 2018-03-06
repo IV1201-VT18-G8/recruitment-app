@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import RecruiterApp from './RecruiterApp';
-import RecruiterLogin from './RecruiterLogin';
+import RecruiterLogin from '../pages/RecruiterLogin';
 import ProtectedRoute from '../components/ProtectedRoute';
-import {DefaultRoute, Switch, Route, Link} from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
+/**
+ * Container for all pages on the recruiter section of the site.
+ */
 class Recruiter extends Component {
 	render() {
 		let recruiterLoginPath = this.props.match.url + "/login"

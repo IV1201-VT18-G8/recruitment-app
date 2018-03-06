@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import {DefaultRoute, Switch, Route, Link} from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import PageContent from '../components/PageContent';
-import ApplicantAppProfile from '../pages/ApplicantAppProfile';
-import ApplicantAppApplication from '../pages/ApplicantAppApplication';
+import ApplicantProfile from '../pages/ApplicantProfile';
+import ApplicantApplication from '../pages/ApplicantApplication';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import messages from '../messages';
 
+/**
+ * Container for auth protected pages on the applicant section of the site.
+ */
 class ApplicantApp extends Component {
 	renderNotAuthorized() {
 		return (
@@ -21,8 +24,8 @@ class ApplicantApp extends Component {
 	renderAuthorized() {
 		return (
 			<Switch>
-				<Route path={this.props.match.url + "profile"} component={ApplicantAppProfile} />
-				<Route component={ApplicantAppApplication} />
+				<Route path={this.props.match.url + "profile"} component={ApplicantProfile} />
+				<Route component={ApplicantApplication} />
 			</Switch>
 		)
 	}

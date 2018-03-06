@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-// import {DefaultRoute, Switch, Route, Link} from 'react-router-dom';
-import Navigation from '../components/Navigation';
 import PageHeader from '../components/PageHeader';
 import { FormattedMessage } from 'react-intl';
 
-class RecruiterAppProfile extends Component {
+/**
+ * Page that displays the profile of a recruiter to themselves.
+ */
+class RecruiterProfile extends Component {
 	render() {
 		return (
 			<div>
@@ -16,4 +17,4 @@ class RecruiterAppProfile extends Component {
 		);
 	}
 }
-export default RecruiterAppProfile;
+export default RecruiterProfile;

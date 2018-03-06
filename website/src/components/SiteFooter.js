@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/**
+ * Global site footer.
+ */
 class SiteFooter extends Component {
 	render() {
 		let footerStyle = {

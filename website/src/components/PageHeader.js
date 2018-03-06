@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/**
+ * Page-specific top level header.
+ */
 class PageHeader extends Component {
 	render() {
 		let h2Style = {

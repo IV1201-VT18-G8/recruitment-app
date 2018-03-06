@@ -1,8 +1,11 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer
-from recruitmentapp.apps.core.models import Applicant
+from recruitmentapp.apps.core.models import Applicant, Availability, \
+    CompetenceProfile, Competence
 
 User = get_user_model()
 
@@ -10,14 +13,30 @@ User = get_user_model()
 class ApplicantSerializerTests(TestCase):
     def setUp(self):
         self.serializer_class = ApplicantSerializer
+        self.competence1 = Competence.objects.create(name='competence1')
+        self.competence2 = Competence.objects.create(name='competence2')
+        self.competence3 = Competence.objects.create(name='competence3')
 
     def test_deserialize_create(self):
         data = {
             'username': 'testuser',
             'password': 'testpass',
             'first_name': 'First',
+            'last_name': 'Last',
             'email': 'test@example.com',
             'social_security_number': '123456789',
+            'availabilities': [
+                {
+                    'start': '2018-02-24',
+                    'end': '2018-03-24',
+                },
+            ],
+            'competences': [
+                {
+                    'competence': self.competence2.pk,
+                    'experience': 2,
+                },
+            ],
         }
         serializer = self.serializer_class(data=data)
         serializer.is_valid()
@@ -30,38 +49,8 @@ class ApplicantSerializerTests(TestCase):
             applicant.social_security_number,
             data['social_security_number']
         )
-
-        self.assertNotEqual(applicant.user.password, 'testpass')
-        self.assertNotEqual(applicant.user.password, '')
-        self.assertNotEqual(applicant.user.password, None)
-
-    def test_deserialize_create_with_existing_user(self):
-        data = {
-            'username': 'testuser',
-            'password': 'testpass',
-            'first_name': 'First',
-            'last_name': 'Last',
-            'email': 'test@example.com',
-            'social_security_number': '123456789',
-        }
-
-        user = User.objects.create(
-            username=data['username'],
-            password=data['password']
-        )
-
-        serializer = self.serializer_class(data=data)
-        serializer.is_valid()
-        serializer.save()
-
-        applicant = Applicant.objects.get(pk=user.pk)
-
-        self.assertEqual(applicant.user.username, data['username'])
-        self.assertEqual(applicant.user.email, data['email'])
-        self.assertEqual(
-            applicant.social_security_number,
-            data['social_security_number']
-        )
+        self.assertEqual(applicant.availabilities.count(), 1)
+        self.assertEqual(applicant.competences.count(), 1)
 
         self.assertNotEqual(applicant.user.password, 'testpass')
         self.assertNotEqual(applicant.user.password, '')
@@ -78,6 +67,22 @@ class ApplicantSerializerTests(TestCase):
             user=user,
             social_security_number='123456789'
         )
+        Availability.objects.create(
+            applicant=applicant,
+            start=datetime.datetime(year=2018, month=5, day=4),
+            end=datetime.datetime(year=2018, month=7, day=3),
+        )
+        Availability.objects.create(
+            applicant=applicant,
+            start=datetime.datetime(year=2019, month=5, day=4),
+            end=datetime.datetime(year=2019, month=7, day=3),
+        )
+        competence_profile = CompetenceProfile.objects.create(
+            applicant=applicant,
+            competence=self.competence1,
+            experience=2,
+        )
+
         serializer = self.serializer_class(applicant)
 
         self.assertEqual(len(serializer.data), 8)
@@ -89,6 +94,12 @@ class ApplicantSerializerTests(TestCase):
             serializer.data['social_security_number'],
             '123456789'
         )
+        self.assertEqual(len(serializer.data['competences']), 1)
+        self.assertEqual(
+            serializer.data['competences'][0]['experience'],
+            2
+        )
+        self.assertEqual(len(serializer.data['availabilities']), 2)
 
     def test_update(self):
         user = User.objects.create(
@@ -101,6 +112,21 @@ class ApplicantSerializerTests(TestCase):
             user=user,
             social_security_number='123456789'
         )
+        Availability.objects.create(
+            applicant=applicant,
+            start=datetime.datetime(year=2019, month=5, day=4),
+            end=datetime.datetime(year=2019, month=7, day=3),
+        )
+        CompetenceProfile.objects.create(
+            applicant=applicant,
+            competence=self.competence1,
+            experience=2.3,
+        )
+        CompetenceProfile.objects.create(
+            applicant=applicant,
+            competence=self.competence2,
+            experience=1,
+        )
 
         oldpass = user.password
 
@@ -108,6 +134,22 @@ class ApplicantSerializerTests(TestCase):
             'last_name': 'Last',
             'password': 'newpass',
             'social_security_number': '987654321',
+            'availabilities': [
+                {
+                    'start': '2018-02-24',
+                    'end': '2018-03-24',
+                },
+            ],
+            'competences': [
+                {
+                    'competence': self.competence1.pk,
+                    'experience': 2,
+                },
+                {
+                    'competence': self.competence3.pk,
+                    'experience': 3.4,
+                },
+            ],
         }
 
         serializer = self.serializer_class(applicant, data=data, partial=True)
@@ -118,8 +160,28 @@ class ApplicantSerializerTests(TestCase):
 
         self.assertEqual(applicant.user.last_name, data['last_name'])
         self.assertEqual(applicant.social_security_number, '987654321')
+        self.assertEqual(applicant.availabilities.count(), 1)
+        self.assertEqual(applicant.availabilities.first().start.year, 2018)
+        self.assertEqual(applicant.availabilities.first().start.month, 2)
+        self.assertEqual(applicant.availabilities.first().start.day, 24)
+        self.assertEqual(applicant.competences.count(), 2)
         self.assertNotEqual(applicant.user.password, oldpass)
         self.assertNotEqual(applicant.user.password, 'testpass')
         self.assertNotEqual(applicant.user.password, 'newpass')
         self.assertNotEqual(applicant.user.password, '')
         self.assertNotEqual(applicant.user.password, None)
+        cp1 = CompetenceProfile.objects.get(
+            applicant=applicant,
+            competence=self.competence1
+        )
+        self.assertTrue(cp1.experience, 2)
+        cp2 = CompetenceProfile.objects.get(
+            applicant=applicant,
+            competence=self.competence3
+        )
+        self.assertTrue(cp2.experience, 3.4)
+        with self.assertRaises(CompetenceProfile.DoesNotExist):
+            CompetenceProfile.objects.get(
+                applicant=applicant,
+                competence=self.competence2
+            )

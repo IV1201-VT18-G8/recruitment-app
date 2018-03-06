@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux'
 import {
 	LOCAL_STORAGE_AUTH_TOKEN_NAME,
 	LOCAL_STORAGE_IS_APPLICANT_NAME,
@@ -25,6 +24,9 @@ const getParsedFromLocalStorage = (name) => {
 	return JSON.parse(raw);
 }
 
+/**
+ * Determine the current authentication state based on local storage.
+ */
 const getCurrentAuthState = () => {
 	const isAuthenticated = localStorage.getItem(LOCAL_STORAGE_AUTH_TOKEN_NAME) ? true : false;
 	const isApplicant = isAuthenticated && getParsedFromLocalStorage(LOCAL_STORAGE_IS_APPLICANT_NAME);
@@ -48,6 +50,9 @@ let initState = {
 	competences: []
 };
 
+/**
+ * The Redux reducer.
+ */
 const recruitmentApp = (state = initState, action) => {
 	let commonUpdatedState = {
 		...getCurrentAuthState()
@@ -71,7 +76,8 @@ const recruitmentApp = (state = initState, action) => {
 		case LOGOUT_SUCCESS:
 			return Object.assign({}, state, commonUpdatedState, {
 				loginErrors: {},
-				applicants: []
+				applicants: [],
+				applicantsFetchErrors: {}
 			});
 		case APPLICANTS_FETCH_REQUEST:
 			return Object.assign({}, state, commonUpdatedState, {
@@ -80,7 +86,8 @@ const recruitmentApp = (state = initState, action) => {
 		case APPLICANTS_FETCH_SUCCESS:
 			return Object.assign({}, state, commonUpdatedState, {
 				isFetchingApplicants: false,
-				applicants: action.applicants
+				applicants: action.applicants,
+				applicantsFetchErrors: {}
 			});
 		case APPLICANTS_FETCH_FAILURE:
 			return Object.assign({}, state, commonUpdatedState, {
