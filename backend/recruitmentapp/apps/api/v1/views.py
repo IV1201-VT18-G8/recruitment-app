@@ -5,7 +5,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from recruitmentapp.apps.api.v1.permissions import IsRecruiterOrSelfOrStaff, \
+from recruitmentapp.apps.api.v1.permissions import IsRecruiterOrStaff, \
     IsApplicantSelfOrRecruiterOrStaff
 from recruitmentapp.apps.api.v1.serializers import ApplicantSerializer, \
     CompetenceSerializer
@@ -27,7 +27,7 @@ class ApplicantViewSet(viewsets.GenericViewSet):
                 'retrieve', 'update', 'partial_update', 'destroy']:
             permission_classes = [IsApplicantSelfOrRecruiterOrStaff]
         else:
-            permission_classes = [IsRecruiterOrSelfOrStaff]
+            permission_classes = [IsRecruiterOrStaff]
         return [permission() for permission in permission_classes]
 
     def retrieve(self, request, pk=None):
@@ -128,10 +128,9 @@ class CompetenceViewSet(viewsets.ViewSet):
     serializer_class = CompetenceSerializer
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            permission_classes = [IsAuthenticated]
-        elif self.action == 'create':
-            permission_classes = [IsRecruiterOrSelfOrStaff]
+        permission_classes = [IsAuthenticated]
+        if self.action == 'create':
+            permission_classes.append(IsRecruiterOrStaff)
         return [permission() for permission in permission_classes]
 
     def list(self, request):
