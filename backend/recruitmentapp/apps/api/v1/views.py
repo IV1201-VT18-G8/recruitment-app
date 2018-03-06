@@ -166,5 +166,6 @@ class CompetenceViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer_class()(data=request.data)
         serializer.is_valid()
-        serializer.save()
+        with transaction.atomic():
+            serializer.save()
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
