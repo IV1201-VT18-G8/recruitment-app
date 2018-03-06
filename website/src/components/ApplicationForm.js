@@ -16,9 +16,15 @@ class ApplicationForm extends Component {
 	render() {
 		let formStyle = {};
 		let labelStyle = {
-			display: 'block',
-			marginBottom: '5px'
+			marginBottom: '5px',
+			display: 'block'
 		};
+		let availabilityStyle = {
+			marginRight: '5px'
+		}
+		let availabilityListStyle = {
+			listStyleType: 'none'
+		}
 
 		return (
 			<form style={formStyle} onSubmit={(event) => this.handleSubmit(event)}>
@@ -46,6 +52,26 @@ class ApplicationForm extends Component {
 					</label>
 					<input type="email" ref="emailAdress" id="emailAdress" style={this.inputStyle('emailAdress')} />
 				</p>
+				<FormattedMessage id="availabilityMessageLabel" defaultMessage="Available " />
+				<button type="submit">
+					<FormattedMessage id="addAvailabilityButtonLabel" defaultMessage="Add" />
+				</button>
+				<ul>
+					<li>
+						<label htmlFor="availabilityFrom" style={availabilityStyle}>
+								<FormattedMessage id="availabilityFromLabel" defaultMessage="From" />
+						</label>
+						<input type="date" ref="availabilityFrom" id="availabilityFrom" style={this.inputStyle('availabilityFrom')} />
+						<label htmlFor="availabilityTo">
+								<FormattedMessage id="availabilityToLabel" defaultMessage=" To " />
+						</label>
+						<input type="date" ref="availabilityTo" id="availabilityTo" style={this.inputStyle('availabilityTo')} />
+						<button type="submit">
+							<FormattedMessage id="removeAvailabilityButtonLabel" defaultMessage="x" />
+						</button>
+					</li>
+				</ul>
+
 				<button type="submit">
 					<FormattedMessage id="applyButtonLabel" defaultMessage="Apply" />
 				</button>
