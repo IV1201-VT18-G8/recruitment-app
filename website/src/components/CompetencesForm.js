@@ -56,9 +56,9 @@ class CompetencesForm extends Component {
 				<button type="button" onClick={this.onAddBtnClick}>
 					<FormattedMessage id="addCompetenceButtonLabel" defaultMessage="+" />
 				</button>
+				{this.renderErrors('request')}
 				{this.renderCompetences()}
 			</div>
-
 		);
 	}
 
@@ -96,6 +96,7 @@ class CompetencesForm extends Component {
 	}
 
 	renderErrors(fieldName) {
+		console.log(this)
 		if (!this.props.competencesFetchErrors[fieldName]) {
 			return
 		}

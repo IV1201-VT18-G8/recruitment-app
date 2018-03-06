@@ -156,3 +156,43 @@ export const attemptFetchCompetences = () => {
 			})
 	}
 };
+
+export const APPLICANT_PATCH_REQUEST = 'APPLICANT_PATCH_REQUEST';
+export const APPLICANT_PATCH_SUCCESS = 'APPLICANT_PATCH_SUCCESS';
+export const APPLICANT_PATCH_FAILURE = 'APPLICANT_PATCH_FAILURE';
+
+export const requestApplicantPatch = () => ({
+	type: APPLICANT_PATCH_REQUEST
+});
+
+export const successApplicantPatch = () => ({
+	type: APPLICANT_PATCH_SUCCESS
+});
+
+export const applicantPatchError = (applicantPatchErrors) => ({
+	type: APPLICANT_PATCH_FAILURE,
+	applicantPatchErrors
+});
+
+export const patchApplicant = (application) => {
+	return dispatch => {
+		dispatch(requestApplicantPatch());
+		api.applicant.patch(application)
+			.then(({ ok, body }) => {
+				if (!ok) {
+					localStorage.removeItem(LOCAL_STORAGE_AUTH_TOKEN_NAME);
+					localStorage.removeItem(LOCAL_STORAGE_USER_ID_NAME);
+					localStorage.removeItem(LOCAL_STORAGE_IS_APPLICANT_NAME);
+					localStorage.removeItem(LOCAL_STORAGE_IS_RECRUITER_NAME);
+					dispatch(loginError(body))
+					return Promise.reject(body);
+				} else {
+					localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_NAME, body.token);
+					localStorage.setItem(LOCAL_STORAGE_USER_ID_NAME, body.user_id);
+					localStorage.setItem(LOCAL_STORAGE_IS_APPLICANT_NAME, body.is_applicant);
+					localStorage.setItem(LOCAL_STORAGE_IS_RECRUITER_NAME, body.is_recruiter);
+					dispatch(receiveLogin());
+				}
+			})
+	}
+};

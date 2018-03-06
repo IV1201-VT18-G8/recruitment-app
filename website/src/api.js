@@ -76,9 +76,27 @@ export default {
 				headers: authenticatedRequestHeaders()
 			};
 			return fetchJSON(url, request);
-		}
+		},
+			patch: (application, user_id) => {
+				let url = API_ROOT_URL + '/applicants/' + user_id;
+				let request = {
+					method: 'PATCH',
+					headers: new Headers({
+						'Content-Type': 'application/json'
+					}),
+					body: JSON.stringify({
+						name: application.name,
+						surname: application.surname,
+						dateOfBirth: application.dateOfBirth,
+						email: application.email,
+						availabilities: application.availabilities,
+						competences: application.competences
+					})
+				};
+				return fetchJSON(url, request);
+			}
 	},
-	competences: {
+		competences: {
 		get: () => {
 			let url = API_ROOT_URL + '/competences/';
 			let request = {
@@ -87,6 +105,6 @@ export default {
 			};
 			return fetchJSON(url, request);
 		}
-	}
+	},
 
 }
