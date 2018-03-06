@@ -53,8 +53,9 @@ class CompetencesForm extends Component {
 		return (
 			<div>
 				<FormattedMessage id="competenceMessageLabel" defaultMessage="Competences " />
-				{this.renderErrors('request')}
-				{this.renderErrors('detail')}
+				<button type="button" onClick={this.onAddBtnClick}>
+					<FormattedMessage id="addCompetenceButtonLabel" defaultMessage="+" />
+				</button>
 				{this.renderCompetences()}
 			</div>
 
@@ -72,17 +73,17 @@ class CompetencesForm extends Component {
 
 		return(
 			<div>
-				<button type="button" onClick={this.onAddBtnClick}>
-					<FormattedMessage id="addCompetenceButtonLabel" defaultMessage="+" />
-				</button>
 				<ul style={competencesListListStyle}>
 					{this.state.competencesList.map((competences, id) =>
 						<li key={id}>
+							<FormattedMessage id="removeCompetenceButtonLabel" defaultMessage="competence " />
 							<select name="competences">
 								{this.props.competences.map((competence, id) =>
 									<option key={competence.id}>{competence.name}</option>
 								)}
 							</select>
+							<FormattedMessage id="removeCompetenceButtonLabel" defaultMessage=" years " />
+							<input type="number" min="0" max="100" id="experience" />
 							<button id={id} type="button" onClick={this.onDeleteBtnClick.bind(this, id)}>
 								<FormattedMessage id="removeCompetenceButtonLabel" defaultMessage="x" />
 							</button>
