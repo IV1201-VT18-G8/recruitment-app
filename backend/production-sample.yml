@@ -1,0 +1,32 @@
+version: "3.0"
+services:
+  db:
+    container_name: recruitmentapp_db
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=108eafc0-cea9-4e21-9d5b-fe96bb0d9b7a
+      - POSTGRES_USER=recruitmentapp
+      - PGDATA=/data/pgdata/
+    volumes:
+      - pgdata:/data/pgdata/
+  django:
+    container_name: recruitmentapp_django
+    build: .
+    environment:
+      - DJANGO_SECRET_KEY=c746ca64-4c52-48f6-ae59-54d328b94aef
+      - DJANGO_HOST_NAME=localhost:8002
+      - DJANGO_CORS_HOST_NAME=localhost:8004
+      - PSQL_NAME=recruitmentapp
+      - PSQL_USER=recruitmentapp
+      - PSQL_PASSWORD=108eafc0-cea9-4e21-9d5b-fe96bb0d9b7a
+      - DB_HOST=db
+#    volumes:
+#      - media:/data/media/
+    ports:
+      - "8001:80"
+      - "8002:443"
+    depends_on:
+       - db
+volumes:
+  pgdata: {}
+#  media: {}
