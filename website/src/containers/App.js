@@ -18,7 +18,7 @@ class App extends Component {
 		return (
 			<div className="App">
 				<SiteHeader>
-					<FormattedMessage id="applicationSiteHeader" defaultMessage="Recruitment" />
+					<FormattedMessage id="siteHeader" defaultMessage="Recruitment" />
 				</SiteHeader>
 
 				<Switch>
