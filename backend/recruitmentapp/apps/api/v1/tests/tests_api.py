@@ -396,25 +396,48 @@ class ApplicantTests(APITestCase):
 class CompetenceTest(APITestCase):
     def setUp(self):
         self.url = "/api/v1/competences/"
+        self.user = User.objects.create_user(
+            username="usernameCt",
+            password="passwordCt")
+        self.competence = Competence.objects.create(name="Skottkärreförare")
 
-    def test_get_competences_unauthenticated(self):
+    def test_list_competences_unauthenticated(self):
         """Unauthenticated users cannot list competences."""
 
-        Competence.objects.create(name="Korvgrillning")
         self.client.force_authenticate(user=None)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_get_competences_authenticated_applicant(self):
+    def test_list_competences_authenticated_applicant(self):
         """All authenticated users can list competences."""
 
-        Competence.objects.create(name="Skottkärreförare")
-        user = User.objects.create_user(
-            username="usernamec2",
-            password="passwordc2")
         applicant = Applicant.objects.create(
-            user=user,
+            user=self.user,
             social_security_number="234-56-1982")
-        self.client.force_authenticate(user=user)
+        self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_retrieve_competence_authenticated(self):
+        """All authenticated users can retrieve a competence."""
+
+        applicant = Applicant.objects.create(
+            user=self.user,
+            social_security_number="234-56-1123")
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url + str(self.competence.id) + '/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_retrieve_competence_unauthenticated(self):
+        """Unauthenticated users cannot retrieve a competence."""
+
+        response = self.client.get(self.url + str(self.competence.id) + '/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_retrieve_competence_not_found(self):
+        """Non existing competences cannot be retrieved."""
+
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url + '123/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

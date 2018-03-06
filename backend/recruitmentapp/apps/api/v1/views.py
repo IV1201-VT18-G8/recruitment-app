@@ -122,17 +122,23 @@ class ApplicantViewSet(viewsets.GenericViewSet):
 
 class CompetenceViewSet(viewsets.ViewSet):
     """Viewset for applicants and recruiters to view competences.
-
-    ### Permissions
-    All authenticated users.
     """
 
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
-    permission_classes = (IsAuthenticated, )
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [IsAuthenticated]
+        elif self.action == 'create':
+            permission_classes = [IsRecruiterOrSelfOrStaff]
+        return [permission() for permission in permission_classes]
 
     def list(self, request):
         """List all competences.
+
+        ### Permissions
+        All authenticated users.
         """
 
         queryset = Competence.objects.all()
@@ -141,6 +147,10 @@ class CompetenceViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         """Retrieve a single competence.
+
+        ### Permissions
+        All authenticated users.
+
         """
 
         queryset = Competence.objects.all()
@@ -150,6 +160,9 @@ class CompetenceViewSet(viewsets.ViewSet):
 
     def create(self, request):
         """Create a new competence.
+
+        ### Permissions
+        All authenticated recruiters and staff.
         """
 
         serializer = self.get_serializer_class()(data=request.data)
