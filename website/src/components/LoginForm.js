@@ -6,11 +6,7 @@ import * as AuthActions from '../actions';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-
-let errMsgStyle = {
-	color: '#ce1717',
-	fontSize: '0.8em'
-};
+import ErrorMessage, { errMsgStyle } from './ErrorMessage';
 
 class LoginForm extends Component {
 	render() {
@@ -44,6 +40,7 @@ class LoginForm extends Component {
 					<FormattedMessage id="loginButtonLabel" defaultMessage="Log in" />
 				</button>
 				{this.errorP('non_field_errors')}
+				{this.errorP('request')}
 			</form>
 		);
 	}
@@ -63,7 +60,7 @@ class LoginForm extends Component {
 
 	errorP(fieldName) {
 		const error = this.props.loginErrors[fieldName];
-		return error ? (<p style={errMsgStyle}>{error}</p>): null;
+		return error ? (<ErrorMessage>{error}</ErrorMessage>): null;
 	}
 
 	errorSpan(fieldName) {

@@ -106,8 +106,7 @@ export const attemptFetchApplicants = () => {
 		api.applicants.get()
 			.then(({ ok, body }) => {
 				if (!ok) {
-					dispatch(applicantsFetchError());
-					return Promise.reject(body);
+					dispatch(applicantsFetchError(body));
 				} else {
 					dispatch(receiveApplicants(body));
 				}
