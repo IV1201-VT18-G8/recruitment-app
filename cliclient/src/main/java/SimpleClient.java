@@ -1,8 +1,10 @@
+import org.json.JSONObject;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 // usage: java [host username password]
@@ -17,6 +19,7 @@ public class SimpleClient {
         String loginUrl= host + "/api/v1/login/";
         String applicantUrl = host + "/api/v1/applicants/";
         String token = client.login(loginUrl, credentials);
+        System.out.println(token);
         boolean isAcceptable = false;
         int requestTimeout = 0;
         long requestTime;
@@ -46,7 +49,7 @@ public class SimpleClient {
         StringBuffer jsonString;
         try {
             URL url = new URL(requestUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -67,9 +70,8 @@ public class SimpleClient {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        String token = jsonString.substring(10);
-        int i = token.indexOf("\"");
-        return token.substring(0, i);
+        JSONObject obj = new JSONObject(jsonString.toString());
+        return obj.getString("token");
 
     }
 
@@ -77,7 +79,7 @@ public class SimpleClient {
         StringBuffer jsonString;
         try {
             URL url = new URL(requestUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
             connection.setDoInput(true);
             connection.setDoOutput(true);
