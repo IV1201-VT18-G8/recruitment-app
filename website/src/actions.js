@@ -80,7 +80,6 @@ export const logout = () => {
 	}
 };
 
-
 /**
  * Fetch multiple applicants
  */
@@ -161,7 +160,6 @@ export const attemptFetchApplicantSelf = () => {
 			})
 	}
 };
-
 
 /**
  * PATCH a single applicant
