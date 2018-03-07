@@ -11,8 +11,6 @@ class SiteFooter extends Component {
 			backgroundColor: "#333",
 			width: "100%",
 			color: "#eee",
-			position: 'fixed',
-			bottom: '0px',
 		};
 
 		return (
