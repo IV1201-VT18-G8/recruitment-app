@@ -10,7 +10,7 @@ public class SimpleClient {
 
     public static void main(String[] args) throws IOException {
         SimpleClient client = new SimpleClient();
-        String host = "http://" + args[0];
+        String host = "https://" + args[0];
         String username = args[1];
         String password = args[2];
         String credentials ="{\"username\":\""+ username +"\",\"password\":\"" + password + "\"}";
