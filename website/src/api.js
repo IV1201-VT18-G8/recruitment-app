@@ -7,7 +7,8 @@ import messages from './messages';
  */
 const authenticatedRequestHeaders = () => {
 	let headers = {
-		'Accept': 'application/json'
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
 	}
 	let token = localStorage.getItem(LOCAL_STORAGE_AUTH_TOKEN_NAME);
 	if (token) {
@@ -69,13 +70,36 @@ export default {
 		}
 	},
 	applicants: {
-		get: () => {
+		get: (params) => {
 			let url = API_ROOT_URL + '/applicants/';
+			if (params && Object.keys(params).indexOf('id') >= 0 && params.id) {
+				url += params.id + '/'
+			}
+			let request = {
+				method: 'GET',
+				headers: authenticatedRequestHeaders()
+			};
+			return fetchJSON(url, request);
+		},
+		patch: (id, data) => {
+			let url = API_ROOT_URL + '/applicants/' + id + '/';
+			let request = {
+				method: 'PATCH',
+				headers: authenticatedRequestHeaders(),
+				body: JSON.stringify(data)
+			};
+			return fetchJSON(url, request);
+		}
+	},
+	competences: {
+		get: () => {
+			let url = API_ROOT_URL + '/competences/';
 			let request = {
 				method: 'GET',
 				headers: authenticatedRequestHeaders()
 			};
 			return fetchJSON(url, request);
 		}
-	}
+	},
+
 }

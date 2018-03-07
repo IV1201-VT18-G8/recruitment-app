@@ -63,7 +63,7 @@ class ApplicantViewSet(viewsets.GenericViewSet):
             data=request.data,
             partial=True
         )
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         with transaction.atomic():
             serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -133,7 +133,7 @@ class CompetenceViewSet(viewsets.ModelViewSet):
             permission_classes.append(IsRecruiterOrStaff)
         return [permission() for permission in permission_classes]
 
-    def list(self, request):
+    def list(self, request, **kwargs):
         """List all competences.
 
         ### Permissions
@@ -144,12 +144,11 @@ class CompetenceViewSet(viewsets.ModelViewSet):
         serializer = CompetenceSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk=None, **kwargs):
         """Retrieve a single competence.
 
         ### Permissions
         All authenticated users.
-
         """
 
         queryset = Competence.objects.all()
@@ -157,7 +156,7 @@ class CompetenceViewSet(viewsets.ModelViewSet):
         serializer = CompetenceSerializer(competence)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def create(self, request):
+    def create(self, request, **kwargs):
         """Create a new competence.
 
         ### Permissions
@@ -165,7 +164,7 @@ class CompetenceViewSet(viewsets.ModelViewSet):
         """
 
         serializer = self.get_serializer_class()(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         with transaction.atomic():
             serializer.save()
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
