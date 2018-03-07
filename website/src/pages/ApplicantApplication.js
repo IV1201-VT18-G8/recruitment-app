@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ApplicationForm from '../components/ApplicationForm';
-import PageContent from '../components/PageContent';
 import PageHeader from '../components/PageHeader';
 import { FormattedMessage } from 'react-intl';
 
