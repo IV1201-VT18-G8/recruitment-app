@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import ErrorMessage, { errMsgStyle } from './ErrorMessage';
+import { inputStyle, invalidInputStyle } from '../consts.js';
 
 /**
  * A login form.
@@ -50,16 +51,8 @@ class LoginForm extends Component {
 	}
 
 	inputStyle(fieldName) {
-		let style = {
-			border: '1px solid black',
-			borderRadius: '3px'
-		};
-		let invalidInputStyle = {
-			border: '1px solid #ce1717',
-			boxShadow: '0px 0px 5px 0px rgba(206,23,23,0.66)'
-		};
 		const error = this.props.loginErrors[fieldName];
-		return error ? {...style, ...invalidInputStyle} : style;
+		return error ? {...inputStyle, ...invalidInputStyle} : inputStyle;
 	}
 
 	errorP(fieldName) {

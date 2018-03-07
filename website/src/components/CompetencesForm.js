@@ -1,61 +1,76 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { attemptLogin } from '../actions';
-import { bindActionCreators } from 'redux';
-import * as AuthActions from '../actions';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { attemptFetchCompetences } from '../actions';
-import ErrorMessage from './ErrorMessage';
-
-let errMsgStyle = {
-	color: '#ce1717',
-	fontSize: '0.8em'
-};
-
-let availabilityStyle = {
-	marginRight: '5px'
-};
+import ErrorMessage, { errMsgStyle } from './ErrorMessage';
+import messages from '../messages';
+import { getLanguage } from '../utils';
+import { inputStyle, invalidInputStyle } from '../consts.js';
 
 class CompetencesForm extends Component {
 
 	constructor(props) {
 		super(props)
-		this.state = {competencesList: []};
+		this.state = {competenceProfiles: []};
 		this.onAddBtnClick = this.onAddBtnClick.bind(this);
-		this.onDeleteBtnClick = this.onDeleteBtnClick.bind(this);
+		this.lang = getLanguage();
+	}
+
+	componentDidMount() {
+		this.props.onRender();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.applicantSelf.competences
+				&& Object.keys(nextProps.applicantPatchErrors).length === 0
+				&& !nextProps.isPatchingApplicant) {
+			this.setState({competenceProfiles: nextProps.applicantSelf.competences})
+		}
+	}
+
+	handleInputChanged(field, row, event) {
+		let competenceProfiles = this.state.competenceProfiles;
+		competenceProfiles[row][field] = event.target.value ? JSON.parse(event.target.value) : ""
+		this.setState({ competenceProfiles });
+		this.props.onChange(competenceProfiles);
 	}
 
 	onAddBtnClick(event) {
-				event.preventDefault()
-			 	const competencesList = this.state.competencesList;
-			 	this.setState({
-					 competencesList: competencesList.concat(
-						{
-							competence: "",
-						}
-					)
-			 });
-	 }
+		event.preventDefault();
+		let competenceProfiles = this.state.competenceProfiles.concat({
+			competence: '',
+			experience: '',
+		});
+		this.setState({ competenceProfiles });
+		this.props.onChange(competenceProfiles);
+	}
 
-	 onDeleteBtnClick(id, event) {
-				  event.preventDefault()
-				  var competencesList = this.state.competencesList;
-					competencesList.splice(id, 1)
-				  this.setState({
-							competencesList
-					});
-		}
+	onDeleteBtnClick(row, event) {
+		event.preventDefault();
+		let competenceProfiles = this.state.competenceProfiles;
+		competenceProfiles.splice(row, 1);
+		this.setState({ competenceProfiles });
+		this.props.onChange(competenceProfiles);
+	}
 
 	render() {
+		let componentStyle = {
+			marginTop: '20px',
+			marginBottom: '20px'
+		}
+		let labelStyle = {
+			marginRight: '20px',
+		}
+
 		return (
-			<div>
-				<FormattedMessage id="competenceMessageLabel" defaultMessage="Competences " />
+			<div style={componentStyle}>
+				<span style={labelStyle}>
+					<FormattedMessage id="competences" defaultMessage="Competences" />
+				</span>
 				<button type="button" onClick={this.onAddBtnClick}>
-					<FormattedMessage id="addCompetenceButtonLabel" defaultMessage="+" />
+					+
 				</button>
-				{this.renderErrors('request')}
 				{this.renderErrors('detail')}
 				{this.renderCompetences()}
 			</div>
@@ -63,37 +78,82 @@ class CompetencesForm extends Component {
 	}
 
 	renderCompetences() {
-		if (this.props.competences.length === 0 && Object.keys(this.props.competencesFetchErrors).length === 0) {
+		if (this.state.competenceProfiles.length === 0
+				&& Object.keys(this.props.competencesFetchErrors).length === 0) {
 			return (
-				<p><FormattedMessage id="noCompetences" defaultMessage="No competences to be chosen from were found" /></p>
+				<p><FormattedMessage id="noCompetences" defaultMessage="'No competence choices." /></p>
 			)
 		}
+		return this.renderTable()
+	}
 
-		let competencesListListStyle = {
-			listStyleType: 'none'
+	renderTable() {
+		if (!this.state.competenceProfiles || this.state.competenceProfiles.length === 0) {
+			return
 		}
 
-		return(
-			<div>
-				<ul style={competencesListListStyle}>
-					{this.state.competencesList.map((competences, id) =>
-						<li key={id}>
-							<FormattedMessage id="removeCompetenceButtonLabel" defaultMessage="competence " />
-							<select name="competences">
-								{this.props.competences.map((competence, id) =>
-									<option key={competence.id}>{competence.name}</option>
-								)}
-							</select>
-							<FormattedMessage id="removeCompetenceButtonLabel" defaultMessage=" years " />
-							<input type="number" min="0" max="100" id="experience" />
-							<button id={id} type="button" onClick={this.onDeleteBtnClick.bind(this, id)}>
-								<FormattedMessage id="removeCompetenceButtonLabel" defaultMessage="x" />
-							</button>
-						</li>
+		return (
+			<table>
+				<thead>
+					<tr>
+						<th></th>
+						<th><FormattedMessage id="yearsOfExperience" defaultMessage="Years of experience" /></th>
+						<th><FormattedMessage id="delete" defaultMessage="Delete" /></th>
+					</tr>
+				</thead>
+				<tbody>
+					{this.state.competenceProfiles.map((competences, row) =>
+						<tr key={row}>
+							<td>
+								<select
+									name="competences"
+									onChange={this.handleInputChanged.bind(this, 'competence', row)}
+									style={this.inputStyle(row, 'competence')}
+								>
+									<option
+										value=""
+										selected={this.state.competenceProfiles[row].competence === "" ? true : false}
+										required
+									>
+										{messages[this.lang].selectCompetence}
+									</option>
+									{this.props.competences.map((competence, key) =>
+										<option
+											key={key}
+											value={competence.id}
+											selected={competence.id === this.state.competenceProfiles[row].competence ? true : false}
+										>
+											{competence.name}
+										</option>
+									)}
+								</select>
+							</td>
+							<td>
+								<input
+									type="number"
+									min="0"
+									max="200"
+									id="experience"
+									value={this.state.competenceProfiles[row].experience}
+									onChange={this.handleInputChanged.bind(this, 'experience', row)}
+									style={this.inputStyle(row, 'experience')}
+									required
+								/>
+							</td>
+							<td>
+								<button type="button" data-row={row} onClick={this.onDeleteBtnClick.bind(this, row)}>
+									x
+								</button>
+							</td>
+							<td>
+								{this.errorP(row, 'competence')}
+								{this.errorP(row, 'experience')}
+							</td>
+						</tr>
 					)
 				}
-				</ul>
-			</div>
+			</tbody>
+		</table>
 		)
 	}
 
@@ -106,27 +166,40 @@ class CompetencesForm extends Component {
 		)
 	}
 
-	inputStyle(fieldName) {
-		let style = {
-			border: '1px solid black',
-			borderRadius: '3px'
-		};
+	inputStyle(row, fieldName) {
+		if (!this.props.applicantPatchErrors.competences
+				|| !this.props.applicantPatchErrors.competences[row]
+				|| !this.props.applicantPatchErrors.competences[row][fieldName]) {
+			return inputStyle
+		}
+		return {...inputStyle, ...invalidInputStyle}
 	}
 
-	componentDidMount() {
-		this.props.onRender();
+	errorP(row, fieldName) {
+		if (!this.props.applicantPatchErrors.competences
+				|| !this.props.applicantPatchErrors.competences[row]
+				|| !this.props.applicantPatchErrors.competences[row][fieldName]) {
+			return
+		}
+		const error = this.props.applicantPatchErrors.competences[row][fieldName];
+		return (<p style={errMsgStyle}>{error}</p>)
 	}
 }
 
 CompetencesForm.propTypes = {
 	competences: PropTypes.array.isRequired,
 	competencesFetchErrors: PropTypes.object.isRequired,
-	onRender: PropTypes.func.isRequired
+	applicantPatchErrors: PropTypes.object.isRequired,
+	applicantSelf: PropTypes.object.isRequired,
+	onRender: PropTypes.func.isRequired,
+	onChange: PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
 	competences: state.competences,
-	competencesFetchErrors: state.competencesFetchErrors
+	competencesFetchErrors: state.competencesFetchErrors,
+	applicantSelf: state.applicantSelf,
+	applicantPatchErrors: state.applicantPatchErrors,
 });
 
 const mapDispatchToProps = dispatch => {

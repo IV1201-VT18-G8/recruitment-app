@@ -10,7 +10,7 @@ import {
 	LOCAL_STORAGE_IS_RECRUITER_NAME
 } from './consts';
 import api from './api';
-
+import { getParsedFromLocalStorage } from './utils';
 
 /**
  * Login and logout
@@ -122,6 +122,87 @@ export const attemptFetchApplicants = () => {
 };
 
 /**
+ * Fetch currently authenticated applicant
+ */
+
+export const APPLICANT_SELF_FETCH_REQUEST = 'APPLICANT_SELF_FETCH_REQUEST';
+export const APPLICANT_SELF_FETCH_SUCCESS = 'APPLICANT_SELF_FETCH_SUCCESS';
+export const APPLICANT_SELF_FETCH_FAILURE = 'APPLICANT_SELF_FETCH_FAILURE';
+
+export const requestApplicantSelf = () => ({
+	type: APPLICANT_SELF_FETCH_REQUEST,
+});
+
+export const receiveApplicantSelf = (applicantSelf) => ({
+	type: APPLICANT_SELF_FETCH_SUCCESS,
+	applicantSelf
+});
+
+export const applicantSelfFetchError = (applicantSelfFetchErrors) => ({
+	type: APPLICANT_SELF_FETCH_FAILURE,
+	applicantSelfFetchErrors
+});
+
+/**
+ * Dispatch Redux actions in order to facilitate the fetching of the
+ * authenticated applicant.
+ */
+export const attemptFetchApplicantSelf = () => {
+	let user_id = getParsedFromLocalStorage(LOCAL_STORAGE_USER_ID_NAME)
+	return dispatch => {
+		dispatch(requestApplicantSelf());
+		api.applicants.get({ id: user_id })
+			.then(({ ok, body }) => {
+				if (!ok) {
+					dispatch(applicantSelfFetchError(body));
+				} else {
+					dispatch(receiveApplicantSelf(body));
+				}
+			})
+	}
+};
+
+
+/**
+ * PATCH a single applicant
+ */
+
+export const APPLICANT_PATCH_REQUEST = 'APPLICANT_PATCH_REQUEST';
+export const APPLICANT_PATCH_SUCCESS = 'APPLICANT_PATCH_SUCCESS';
+export const APPLICANT_PATCH_FAILURE = 'APPLICANT_PATCH_FAILURE';
+
+export const requestApplicantPatch = () => ({
+	type: APPLICANT_PATCH_REQUEST,
+});
+
+export const applicantPatchSuccess = response => ({
+	type: APPLICANT_PATCH_SUCCESS,
+	response
+});
+
+export const applicantPatchError = (applicantPatchErrors) => ({
+	type: APPLICANT_PATCH_FAILURE,
+	applicantPatchErrors
+});
+
+/**
+ * Dispatch Redux actions in order to facilitate the patching of an applicant.
+ */
+export const attemptPatchApplicant = (id, data) => {
+	return dispatch => {
+		dispatch(requestApplicantPatch());
+		api.applicants.patch(id, data)
+			.then(({ ok, body }) => {
+				if (!ok) {
+					dispatch(applicantPatchError(body));
+				} else {
+					dispatch(applicantPatchSuccess(body));
+				}
+			})
+	}
+};
+
+/**
  * Fetch multiple competences
  */
 
@@ -152,46 +233,6 @@ export const attemptFetchCompetences = () => {
 					dispatch(competencesFetchError(body));
 				} else {
 					dispatch(receiveCompetences(body));
-				}
-			})
-	}
-};
-
-export const APPLICANT_PATCH_REQUEST = 'APPLICANT_PATCH_REQUEST';
-export const APPLICANT_PATCH_SUCCESS = 'APPLICANT_PATCH_SUCCESS';
-export const APPLICANT_PATCH_FAILURE = 'APPLICANT_PATCH_FAILURE';
-
-export const requestApplicantPatch = () => ({
-	type: APPLICANT_PATCH_REQUEST
-});
-
-export const successApplicantPatch = () => ({
-	type: APPLICANT_PATCH_SUCCESS
-});
-
-export const applicantPatchError = (applicantPatchErrors) => ({
-	type: APPLICANT_PATCH_FAILURE,
-	applicantPatchErrors
-});
-
-export const patchApplicant = (application) => {
-	return dispatch => {
-		dispatch(requestApplicantPatch());
-		api.applicant.patch(application)
-			.then(({ ok, body }) => {
-				if (!ok) {
-					localStorage.removeItem(LOCAL_STORAGE_AUTH_TOKEN_NAME);
-					localStorage.removeItem(LOCAL_STORAGE_USER_ID_NAME);
-					localStorage.removeItem(LOCAL_STORAGE_IS_APPLICANT_NAME);
-					localStorage.removeItem(LOCAL_STORAGE_IS_RECRUITER_NAME);
-					dispatch(loginError(body))
-					return Promise.reject(body);
-				} else {
-					localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_NAME, body.token);
-					localStorage.setItem(LOCAL_STORAGE_USER_ID_NAME, body.user_id);
-					localStorage.setItem(LOCAL_STORAGE_IS_APPLICANT_NAME, body.is_applicant);
-					localStorage.setItem(LOCAL_STORAGE_IS_RECRUITER_NAME, body.is_recruiter);
-					dispatch(receiveLogin());
 				}
 			})
 	}

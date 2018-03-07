@@ -4,25 +4,25 @@ import {
 	LOCAL_STORAGE_IS_RECRUITER_NAME,
 	LOCAL_STORAGE_USER_ID_NAME
 } from '../consts';
-
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILURE = 'LOGIN_FAILURE';
-export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
-export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
-
-export const APPLICANTS_FETCH_REQUEST = 'APPLICANTS_FETCH_REQUEST';
-export const APPLICANTS_FETCH_SUCCESS = 'APPLICANTS_FETCH_SUCCESS';
-export const APPLICANTS_FETCH_FAILURE = 'APPLICANTS_FETCH_FAILURE';
-
-export const COMPETENCES_FETCH_REQUEST = 'COMPETENCES_FETCH_REQUEST';
-export const COMPETENCES_FETCH_SUCCESS = 'COMPETENCES_FETCH_SUCCESS';
-export const COMPETENCES_FETCH_FAILURE = 'COMPETENCES_FETCH_FAILURE';
-
-const getParsedFromLocalStorage = (name) => {
-	let raw = localStorage.getItem(name);
-	return JSON.parse(raw);
-}
+import {
+	LOGIN_REQUEST,
+	LOGIN_SUCCESS,
+	LOGIN_FAILURE,
+	LOGOUT_SUCCESS,
+	APPLICANTS_FETCH_REQUEST,
+	APPLICANTS_FETCH_SUCCESS,
+	APPLICANTS_FETCH_FAILURE,
+	APPLICANT_SELF_FETCH_REQUEST,
+	APPLICANT_SELF_FETCH_SUCCESS,
+	APPLICANT_SELF_FETCH_FAILURE,
+	APPLICANT_PATCH_REQUEST,
+	APPLICANT_PATCH_SUCCESS,
+	APPLICANT_PATCH_FAILURE,
+	COMPETENCES_FETCH_REQUEST,
+	COMPETENCES_FETCH_SUCCESS,
+	COMPETENCES_FETCH_FAILURE,
+} from '../actions';
+import { getParsedFromLocalStorage } from '../utils';
 
 /**
  * Determine the current authentication state based on local storage.
@@ -45,6 +45,12 @@ let initState = {
 	isFetchingApplicants: false,
 	applicantsFetchErrors: {},
 	applicants: [],
+	isFetchingApplicantSelf: false,
+	applicantSelfFetchErrors: {},
+	applicantSelf: {},
+	isPatchingApplicant: false,
+	applicantPatchSuccess: false,
+	applicantPatchErrors: {},
 	isFetchingCompetences: false,
 	competencesFetchErrors: {},
 	competences: []
@@ -55,7 +61,8 @@ let initState = {
  */
 const recruitmentApp = (state = initState, action) => {
 	let commonUpdatedState = {
-		...getCurrentAuthState()
+		...getCurrentAuthState(),
+		applicantPatchSuccess: false,
 	};
 
 	switch (action.type) {
@@ -95,22 +102,54 @@ const recruitmentApp = (state = initState, action) => {
 				applicantsFetchErrors: action.applicantsFetchErrors,
 				applicants: []
 			});
-			case COMPETENCES_FETCH_REQUEST:
-				return Object.assign({}, state, commonUpdatedState, {
-					isFetchingCompetences: true
-				});
-			case COMPETENCES_FETCH_SUCCESS:
-				return Object.assign({}, state, commonUpdatedState, {
-					isFetchingCompetences: false,
-					competences: action.competences,
-					competencesFetchErrors: {}
-				});
-			case COMPETENCES_FETCH_FAILURE:
-				return Object.assign({}, state, commonUpdatedState, {
-					isFetchingCompetences: false,
-					competencesFetchErrors: action.competencesFetchErrors,
-					competences: []
-				});
+		case APPLICANT_SELF_FETCH_REQUEST:
+			return Object.assign({}, state, commonUpdatedState, {
+				isFetchingApplicantSelf: true
+			});
+		case APPLICANT_SELF_FETCH_SUCCESS:
+			return Object.assign({}, state, commonUpdatedState, {
+				isFetchingApplicantSelf: false,
+				applicantSelf: action.applicantSelf,
+				applicantSelfFetchErrors: {}
+			});
+		case APPLICANT_SELF_FETCH_FAILURE:
+			return Object.assign({}, state, commonUpdatedState, {
+				isFetchingApplicantSelf: false,
+				applicantSelfFetchErrors: action.applicantSelfFetchErrors,
+				applicantSelf: {}
+			});
+		case APPLICANT_PATCH_REQUEST:
+			return Object.assign({}, state, commonUpdatedState, {
+				isPatchingApplicant: true
+			});
+		case APPLICANT_PATCH_SUCCESS:
+			return Object.assign({}, state, commonUpdatedState, {
+				isPatchingApplicant: false,
+				applicantPatchSuccess: true,
+				applicantPatchErrors: {},
+				applicantSelf: action.response.id === state.user_id ? action.response : state.applicantSelf,
+			});
+		case APPLICANT_PATCH_FAILURE:
+			return Object.assign({}, state, commonUpdatedState, {
+				isPatchingApplicant: false,
+				applicantPatchErrors: action.applicantPatchErrors,
+			});
+		case COMPETENCES_FETCH_REQUEST:
+			return Object.assign({}, state, commonUpdatedState, {
+				isFetchingCompetences: true
+			});
+		case COMPETENCES_FETCH_SUCCESS:
+			return Object.assign({}, state, commonUpdatedState, {
+				isFetchingCompetences: false,
+				competences: action.competences,
+				competencesFetchErrors: {}
+			});
+		case COMPETENCES_FETCH_FAILURE:
+			return Object.assign({}, state, commonUpdatedState, {
+				isFetchingCompetences: false,
+				competencesFetchErrors: action.competencesFetchErrors,
+				competences: []
+			});
 		default:
 			return state;
 	}
