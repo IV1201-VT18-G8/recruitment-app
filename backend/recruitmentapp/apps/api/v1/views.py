@@ -120,9 +120,8 @@ class ApplicantViewSet(viewsets.GenericViewSet):
         )
 
 
-class CompetenceViewSet(viewsets.ModelViewSet):
-    """Viewset for applicants and recruiters to view competences.
-    """
+class CompetenceViewSet(viewsets.GenericViewSet):
+    """Viewset for applicants and recruiters to view competences."""
 
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
@@ -140,7 +139,7 @@ class CompetenceViewSet(viewsets.ModelViewSet):
         All authenticated users.
         """
 
-        queryset = Competence.objects.all()
+        queryset = self.get_queryset()
         serializer = CompetenceSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -151,7 +150,7 @@ class CompetenceViewSet(viewsets.ModelViewSet):
         All authenticated users.
         """
 
-        queryset = Competence.objects.all()
+        queryset = self.get_queryset()
         competence = get_object_or_404(queryset, pk=pk)
         serializer = CompetenceSerializer(competence)
         return Response(serializer.data, status=status.HTTP_200_OK)
