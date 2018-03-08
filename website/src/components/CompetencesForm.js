@@ -78,7 +78,7 @@ class CompetencesForm extends Component {
 	}
 
 	renderCompetences() {
-		if (this.state.competenceProfiles.length === 0
+		if (this.props.competences.length === 0
 				&& Object.keys(this.props.competencesFetchErrors).length === 0) {
 			return (
 				<p><FormattedMessage id="noCompetences" defaultMessage="'No competence choices." /></p>
