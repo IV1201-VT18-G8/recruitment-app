@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 
+/**
+ * Global site footer.
+ */
 class SiteFooter extends Component {
 	render() {
 		let footerStyle = {
-			maxWidth: "700px",
-			margin: "0 auto",
 			padding: "30px",
-			fontSize: "0.8em"
+			fontSize: "0.8em",
+			backgroundColor: "#333",
+			width: "100%",
+			color: "#eee",
 		};
 
 		return (

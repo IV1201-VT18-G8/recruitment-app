@@ -2,18 +2,45 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { attemptFetchApplicants } from '../actions';
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl';
+import ErrorMessage from './ErrorMessage';
 
+let tableStyle = {
+	borderCollapse: 'collapse'
+};
+
+let cellStyle = {
+	border: '1px solid #bbb',
+	padding: '10px',
+	textAlign: 'left'
+}
+
+/**
+ * A table that lists applicants from `state.applicants`.
+ */
 class ApplicantsList extends Component {
 	render() {
-		let tableStyle = {
-			borderCollapse: 'collapse'
-		};
+		return (
+			<div>
+				{this.renderErrors('request')}
+				{this.renderErrors('detail')}
+				{this.renderTable()}
+			</div>
+		);
+	}
 
-		let cellStyle = {
-			border: '1px solid #bbb',
-			padding: '10px',
-			textAlign: 'left'
+	renderErrors(fieldName) {
+		if (!this.props.applicantsFetchErrors[fieldName]) {
+			return
+		}
+		return (
+			<ErrorMessage>{this.props.applicantsFetchErrors[fieldName]}</ErrorMessage>
+		)
+	}
+
+	renderTable() {
+		if (this.props.applicants.length === 0) {
+			return
 		}
 
 		return (
@@ -42,7 +69,7 @@ class ApplicantsList extends Component {
 					})}
 				</tbody>
 			</table>
-		);
+		)
 	}
 
 	componentDidMount() {
@@ -52,11 +79,13 @@ class ApplicantsList extends Component {
 
 ApplicantsList.propTypes = {
 	applicants: PropTypes.array.isRequired,
+	applicantsFetchErrors: PropTypes.object.isRequired,
 	onRender: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
-	applicants: state.applicants
+	applicants: state.applicants,
+	applicantsFetchErrors: state.applicantsFetchErrors
 });
 
 const mapDispatchToProps = dispatch => {

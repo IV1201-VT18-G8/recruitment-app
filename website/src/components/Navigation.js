@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Route, NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './Navigation.css';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
@@ -13,6 +13,20 @@ let activeStyle = {
 	color: "white"
 };
 
+/**
+ * Navigation menu.
+ *
+ * Displays menu items according to `this.props.links`, which is an object like
+ * this:
+ *
+ * {
+ *     'Menu Item 1': '/url/to/somewhere',
+ *     'Menu Item 2': '/url/to/somewhere/else',
+ * }
+ * 
+ * In addition to this, a login/logout menu item is displayed as the last item,
+ * depending on the value of `state.isAuthenticated`.
+ */
 class Navigation extends Component {
 	render() {
 		let navStyle = {

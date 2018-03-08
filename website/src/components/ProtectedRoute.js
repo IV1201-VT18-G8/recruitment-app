@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
 	Route,
 	Redirect,
@@ -6,6 +6,9 @@ import {
 import { connect } from 'react-redux';
 
 /**
+ * Route that redirects the user to `loginPath` if `state.isAuthenticated` is
+ * false. Otherwise renders `component`.
+ *
  * Adapted from React Training:
  * https://reacttraining.com/react-router/web/example/auth-workflow
  */

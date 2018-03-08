@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { attemptLogin } from '../actions';
-import { bindActionCreators } from 'redux';
-import * as AuthActions from '../actions';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import ErrorMessage, { errMsgStyle } from './ErrorMessage';
+import { inputStyle, invalidInputStyle } from '../consts.js';
 
-let errMsgStyle = {
-	color: '#ce1717',
-	fontSize: '0.8em'
-};
-
+/**
+ * A login form.
+ *
+ * Calls `this.props.onLoginSubmit` on submit.
+ * Redirects to `this.props.onLoginRedirect` when user is authenticated.
+ */
 class LoginForm extends Component {
 	render() {
 		if (this.props.isAuthenticated) {
@@ -44,26 +45,19 @@ class LoginForm extends Component {
 					<FormattedMessage id="loginButtonLabel" defaultMessage="Log in" />
 				</button>
 				{this.errorP('non_field_errors')}
+				{this.errorP('request')}
 			</form>
 		);
 	}
 
 	inputStyle(fieldName) {
-		let style = {
-			border: '1px solid black',
-			borderRadius: '3px'
-		};
-		let invalidInputStyle = {
-			border: '1px solid #ce1717',
-			boxShadow: '0px 0px 5px 0px rgba(206,23,23,0.66)'
-		};
 		const error = this.props.loginErrors[fieldName];
-		return error ? {...style, ...invalidInputStyle} : style;
+		return error ? {...inputStyle, ...invalidInputStyle} : inputStyle;
 	}
 
 	errorP(fieldName) {
 		const error = this.props.loginErrors[fieldName];
-		return error ? (<p style={errMsgStyle}>{error}</p>): null;
+		return error ? (<ErrorMessage>{error}</ErrorMessage>): null;
 	}
 
 	errorSpan(fieldName) {

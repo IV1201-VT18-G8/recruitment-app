@@ -4,15 +4,16 @@ import PageHeader from '../components/PageHeader';
 import PageContent from '../components/PageContent';
 import { FormattedMessage } from 'react-intl';
 
+/**
+ * Login page for recruiters.
+ */
 class RecruiterLogin extends Component {
 	render() {
 		return (
-			<div>
-				<PageContent>
-					<PageHeader><FormattedMessage id="recruiterLoginHeader" defaultMessage="Recruiter Login" /></PageHeader>
-					<LoginForm onLoginRedirect="/recruiter" />
-				</PageContent>
-			</div>
+			<PageContent>
+				<PageHeader><FormattedMessage id="recruiterLoginHeader" defaultMessage="Recruiter Login" /></PageHeader>
+				<LoginForm onLoginRedirect="/recruiter" />
+			</PageContent>
 		);
 	}
 }
