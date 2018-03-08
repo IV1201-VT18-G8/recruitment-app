@@ -25,6 +25,8 @@ public class SimpleClient {
         long requestTime;
         long time = 0;
         int numberOfRequest = 1000;
+        System.out.println("Sending requests...");
+        System.out.println();
         for (int i = 1; i <= numberOfRequest; i++) {
             long timeBeforeRequest = System.currentTimeMillis();
             client.requestApplicants(applicantUrl, token);
