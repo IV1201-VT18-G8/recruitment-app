@@ -8,7 +8,7 @@ class PageContent extends Component {
 		let mainStyle = {
 			maxWidth: "700px",
 			margin: "0 auto",
-			padding: "30px"
+			padding: "30px",
 		};
 
 		return (

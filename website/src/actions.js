@@ -10,7 +10,7 @@ import {
 	LOCAL_STORAGE_IS_RECRUITER_NAME
 } from './consts';
 import api from './api';
-
+import { getParsedFromLocalStorage } from './utils';
 
 /**
  * Login and logout
@@ -80,7 +80,6 @@ export const logout = () => {
 	}
 };
 
-
 /**
  * Fetch multiple applicants
  */
@@ -116,6 +115,122 @@ export const attemptFetchApplicants = () => {
 					dispatch(applicantsFetchError(body));
 				} else {
 					dispatch(receiveApplicants(body));
+				}
+			})
+	}
+};
+
+/**
+ * Fetch currently authenticated applicant
+ */
+
+export const APPLICANT_SELF_FETCH_REQUEST = 'APPLICANT_SELF_FETCH_REQUEST';
+export const APPLICANT_SELF_FETCH_SUCCESS = 'APPLICANT_SELF_FETCH_SUCCESS';
+export const APPLICANT_SELF_FETCH_FAILURE = 'APPLICANT_SELF_FETCH_FAILURE';
+
+export const requestApplicantSelf = () => ({
+	type: APPLICANT_SELF_FETCH_REQUEST,
+});
+
+export const receiveApplicantSelf = (applicantSelf) => ({
+	type: APPLICANT_SELF_FETCH_SUCCESS,
+	applicantSelf
+});
+
+export const applicantSelfFetchError = (applicantSelfFetchErrors) => ({
+	type: APPLICANT_SELF_FETCH_FAILURE,
+	applicantSelfFetchErrors
+});
+
+/**
+ * Dispatch Redux actions in order to facilitate the fetching of the
+ * authenticated applicant.
+ */
+export const attemptFetchApplicantSelf = () => {
+	let user_id = getParsedFromLocalStorage(LOCAL_STORAGE_USER_ID_NAME)
+	return dispatch => {
+		dispatch(requestApplicantSelf());
+		api.applicants.get({ id: user_id })
+			.then(({ ok, body }) => {
+				if (!ok) {
+					dispatch(applicantSelfFetchError(body));
+				} else {
+					dispatch(receiveApplicantSelf(body));
+				}
+			})
+	}
+};
+
+/**
+ * PATCH a single applicant
+ */
+
+export const APPLICANT_PATCH_REQUEST = 'APPLICANT_PATCH_REQUEST';
+export const APPLICANT_PATCH_SUCCESS = 'APPLICANT_PATCH_SUCCESS';
+export const APPLICANT_PATCH_FAILURE = 'APPLICANT_PATCH_FAILURE';
+
+export const requestApplicantPatch = () => ({
+	type: APPLICANT_PATCH_REQUEST,
+});
+
+export const applicantPatchSuccess = response => ({
+	type: APPLICANT_PATCH_SUCCESS,
+	response
+});
+
+export const applicantPatchError = (applicantPatchErrors) => ({
+	type: APPLICANT_PATCH_FAILURE,
+	applicantPatchErrors
+});
+
+/**
+ * Dispatch Redux actions in order to facilitate the patching of an applicant.
+ */
+export const attemptPatchApplicant = (id, data) => {
+	return dispatch => {
+		dispatch(requestApplicantPatch());
+		api.applicants.patch(id, data)
+			.then(({ ok, body }) => {
+				if (!ok) {
+					dispatch(applicantPatchError(body));
+				} else {
+					dispatch(applicantPatchSuccess(body));
+				}
+			})
+	}
+};
+
+/**
+ * Fetch multiple competences
+ */
+
+export const COMPETENCES_FETCH_REQUEST = 'COMPETENCES_FETCH_REQUEST';
+export const COMPETENCES_FETCH_SUCCESS = 'COMPETENCES_FETCH_SUCCESS';
+export const COMPETENCES_FETCH_FAILURE = 'COMPETENCES_FETCH_FAILURE';
+
+export const requestCompetences = () => ({
+	type: COMPETENCES_FETCH_REQUEST,
+});
+
+export const receiveCompetences = (competences) => ({
+	type: COMPETENCES_FETCH_SUCCESS,
+	competences
+});
+
+export const competencesFetchError = (competencesFetchErrors) => ({
+	type: COMPETENCES_FETCH_FAILURE,
+	competencesFetchErrors
+});
+
+export const attemptFetchCompetences = () => {
+	return dispatch => {
+		dispatch(requestCompetences());
+		api.competences.get()
+			.then(({ ok, body }) => {
+				if (!ok) {
+					dispatch(competencesFetchError(body));
+				} else {
+					dispatch(receiveCompetences(body));
 				}
 			})
 	}

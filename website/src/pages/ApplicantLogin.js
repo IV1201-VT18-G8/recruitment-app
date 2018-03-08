@@ -10,14 +10,12 @@ import { FormattedMessage } from 'react-intl';
 class ApplicantLogin extends Component {
 	render() {
 		return (
-			<div>
-				<PageContent>
-					<PageHeader>
-						<FormattedMessage id="loginHeader" defaultMessage="Applicant login" />
-					</PageHeader>
-					<LoginForm onLoginRedirect="/" />
-				</PageContent>
-			</div>
+			<PageContent>
+				<PageHeader>
+					<FormattedMessage id="loginHeader" defaultMessage="Applicant login" />
+				</PageHeader>
+				<LoginForm onLoginRedirect="/" />
+			</PageContent>
 		);
 	}
 }

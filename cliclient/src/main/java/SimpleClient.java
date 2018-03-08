@@ -19,7 +19,6 @@ public class SimpleClient {
         String loginUrl= host + "/api/v1/login/";
         String applicantUrl = host + "/api/v1/applicants/";
         String token = client.login(loginUrl, credentials);
-        System.out.println(token);
         boolean isAcceptable = false;
         int requestTimeout = 0;
         long requestTime;

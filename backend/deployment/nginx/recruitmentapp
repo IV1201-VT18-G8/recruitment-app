@@ -15,6 +15,9 @@ server {
     # add Strict-Transport-Security to prevent man in the middle attacks
     add_header Strict-Transport-Security "max-age=31536000";
 
+    access_log /var/log/nginx/access_django.log;
+    error_log /var/log/nginx/error_django.log;
+
     location /static/ {
         alias /static/;
     }

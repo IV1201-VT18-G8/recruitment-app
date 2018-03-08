@@ -31,6 +31,10 @@ class ApplicantSerializer(serializers.Serializer):
     Should be given an Applicant when instantiated.
     """
 
+    id = serializers.IntegerField(
+        source='user.id',
+        read_only=True,
+    )
     username = serializers.CharField(
         source='user.username',
         max_length=150,

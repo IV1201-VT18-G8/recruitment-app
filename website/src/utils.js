@@ -13,3 +13,8 @@ export const getLanguage = () => {
   }
   return 'en'
 }
+
+export const getParsedFromLocalStorage = (name) => {
+	let raw = localStorage.getItem(name);
+	return JSON.parse(raw);
+}

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ApplicationForm from '../components/ApplicationForm';
 import PageHeader from '../components/PageHeader';
 import { FormattedMessage } from 'react-intl';
 
@@ -10,9 +11,9 @@ class ApplicantApplication extends Component {
 		return (
 			<div>
 				<PageHeader>
-					<FormattedMessage id="applicantHeader" defaultMessage="Application" />
+					<FormattedMessage id="application" defaultMessage="Application" />
 				</PageHeader>
-				<FormattedMessage id="applicant" defaultMessage="Applicant page" />
+				<ApplicationForm onLoginRedirect="/" />
 			</div>
 		);
 	}
