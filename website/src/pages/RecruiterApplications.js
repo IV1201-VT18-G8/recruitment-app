@@ -10,7 +10,7 @@ class RecruiterApplications extends Component {
 	render() {
 		return (
 			<div>
-				<PageHeader><FormattedMessage id="recruiterHeader" defaultMessage="Application" /></PageHeader>
+				<PageHeader><FormattedMessage id="applications" defaultMessage="Applications" /></PageHeader>
 				<ApplicantsList />
 			</div>
 		);
