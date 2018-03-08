@@ -41,7 +41,7 @@ public class SimpleClient {
         }
         System.out.println("Number of requests: " + numberOfRequest);
         System.out.println("Average request time(milliseconds): " + averageResponseTime);
-        System.out.println("Number of request higher than 100ms: " + requestTimeout);
+        System.out.println("Number of request higher than 500ms: " + requestTimeout);
         System.out.println("Accepted request time: " + isAcceptable);
 
 
