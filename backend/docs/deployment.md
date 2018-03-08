@@ -96,4 +96,4 @@ Run tests (and linting):
 
 Get logs:
 
-    docker cp recruitmentapp_django:/var/log/nginx/access.log access.log && docker cp recruitmentapp_django:/var/log/nginx/error.log error.log
+    docker cp recruitmentapp_django:/var/log/nginx/access_django.log access_django.log && docker cp recruitmentapp_django:/var/log/nginx/error_django.log error_django.log
