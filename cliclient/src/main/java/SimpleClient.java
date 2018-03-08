@@ -30,15 +30,16 @@ public class SimpleClient {
             client.requestApplicants(applicantUrl, token);
             requestTime = System.currentTimeMillis() - timeBeforeRequest;
             time += requestTime;
-            if (requestTime > 100) {
+            if (requestTime > 500) {
                 requestTimeout++;
             }
         }
-        if (!(requestTimeout > (numberOfRequest * 0.05))) {
+        long averageResponseTime = time / numberOfRequest;
+        if (!(requestTimeout > (numberOfRequest * 0.05)) && averageResponseTime < 200) {
             isAcceptable = true;
         }
         System.out.println("Number of requests: " + numberOfRequest);
-        System.out.println("Average request time(milliseconds): " + time / numberOfRequest);
+        System.out.println("Average request time(milliseconds): " + averageResponseTime);
         System.out.println("Number of request higher than 100ms: " + requestTimeout);
         System.out.println("Accepted request time: " + isAcceptable);
 
